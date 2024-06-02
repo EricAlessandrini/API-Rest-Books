@@ -8,7 +8,7 @@ import com.ega.books.domain.entity.GenreEntity;
 @Repository
 public interface GenreRepository extends JpaRepository<GenreEntity, Long> {
 
-	GenreEntity findByName(String genreName);
-	boolean existsByName(String genreName);
+	GenreEntity findByNameIgnoreCase(String genreName);
+	boolean existsByNameIgnoreCase(String genreName);
 	
 }

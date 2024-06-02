@@ -1,5 +1,9 @@
 package com.ega.books;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import com.ega.books.domain.Genre;
 import com.ega.books.domain.entity.GenreEntity;
 import com.ega.books.persistence.repository.GenreRepository;
+import com.ega.books.service.book.BookServiceImpl;
 
 @SpringBootApplication
 public class ApiRestBooksApplication {
@@ -17,10 +22,10 @@ public class ApiRestBooksApplication {
 	}
 	
 	@Bean
-	public CommandLineRunner initializationData(GenreRepository genreRepository) {
+	public CommandLineRunner initializationData(GenreRepository genreRepository, BookServiceImpl bookService) {
 		return args -> {
 			for(Genre genre : Genre.values()) {
-				if(!genreRepository.existsByName(genre.getName())) {
+				if(!genreRepository.existsByNameIgnoreCase(genre.getName())) {
 					genreRepository.save(GenreEntity.builder()
 							.name(genre.getName())
 							.description(genre.getDescription())

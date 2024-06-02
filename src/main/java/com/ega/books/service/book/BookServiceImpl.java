@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ega.books.domain.dto.BookDTO;
 import com.ega.books.domain.entity.BookEntity;
-import com.ega.books.persistence.dao.books.IBookDAO;
+import com.ega.books.persistence.dao.IDatabaseCenter;
 import com.ega.books.utils.BookMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -16,37 +16,40 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookServiceImpl implements IBookService{
 	
-	private final IBookDAO dao;
+	private final IDatabaseCenter dbCenter;
 	private final BookMapper bookMapper;
-
+	
 	@Override
-	public BookDTO findBookById(Long id) {
-		BookEntity entity = dao.findBookById(id);
-		return bookMapper.entityToDTO(entity);
+	public List<BookDTO> findBookByTitle(String bookTitle) {
+		List<BookDTO> booksFound = dbCenter.findBookByTitle(bookTitle).stream()
+				.map(bookEntity -> bookMapper.entityToDTO(bookEntity))
+				.collect(Collectors.toList());
+		
+		return booksFound;
 	}
 
 	@Override
 	public List<BookDTO> findAllBooks() {
-		List<BookDTO> allBooks = dao.findAllBooks().stream()
+		return dbCenter.findAllBooks().stream()
 				.map(bookEntity -> bookMapper.entityToDTO(bookEntity))
 				.collect(Collectors.toList());
-		return allBooks;
 	}
 
 	@Override
 	public void saveBook(BookDTO bookDTO) {
 		BookEntity bookEntity = bookMapper.dtoToEntity(bookDTO);
-		dao.saveBook(bookEntity);
+		dbCenter.saveBook(bookEntity);
 	}
 
 	@Override
 	public void updateBook(Long id, BookDTO bookDTO) {
 		BookEntity bookEntity = bookMapper.dtoToEntity(bookDTO);
-		dao.updateBook(id, bookEntity);
+		dbCenter.updateBook(id, bookEntity);
 	}
 
 	@Override
 	public void deleteBook(Long id) {
-		dao.deleteBookById(id);
+		dbCenter.deleteBookById(id);
 	}
+
 }

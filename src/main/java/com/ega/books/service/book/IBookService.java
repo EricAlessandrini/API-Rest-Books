@@ -5,11 +5,12 @@ import java.util.List;
 import com.ega.books.domain.dto.BookDTO;
 
 public interface IBookService {
-
-	// Buscar por ID
-	BookDTO findBookById(Long id);
 	
-	// Buscar por autor
+	//Buscar libro por nombre
+	List<BookDTO> findBookByTitle(String bookTitle);
+	
+	// Buscar libros por genero
+	//List<BookDTO> findBooksByGenre(String genreName);
 	
 	// Buscar todos los libros
 	List<BookDTO> findAllBooks();

@@ -2,6 +2,8 @@ package com.ega.books.domain.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,10 +22,13 @@ public class BookEntity {
 	
 	private String title;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "books_genre", 
 	joinColumns = @JoinColumn(name = "book_id"),
 	inverseJoinColumns = @JoinColumn(name = "genre_id"))
+	@JsonIgnore
 	private Set<GenreEntity> genre;
 	
+	@ManyToOne(cascade = CascadeType.ALL)
+	private AuthorEntity author;
 }

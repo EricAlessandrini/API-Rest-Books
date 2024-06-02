@@ -2,12 +2,10 @@ package com.ega.books.exception;
 
 import java.time.LocalDateTime;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 
 import com.ega.books.exception.exceptions.*;
 
@@ -37,14 +35,26 @@ public class GlobalControllerAdvice {
 				.message(ErrorCatalog.BOOK_NOT_FOUND.getErrorMessage())
 				.timestamp(LocalDateTime.now())
 				.build();
+		
 		return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(EmptyListFromDatabaseException.class)
+	public ResponseEntity<ErrorResponse> emptyListOfBooksExceptionHandler() {
+		ErrorResponse errorResponse = ErrorResponse.builder()
+				.code(ErrorCatalog.EMPTY_LIST_FROM_DATABASE.getErrorCode())
+				.message(ErrorCatalog.EMPTY_LIST_FROM_DATABASE.getErrorMessage())
+				.timestamp(LocalDateTime.now())
+				.build();
+		
+		return new ResponseEntity<>(errorResponse, HttpStatus.NO_CONTENT);
 	}
 	
 	@ExceptionHandler(InvalidGenreException.class)
 	public ResponseEntity<ErrorResponse> invalidGenreExceptionHandler(){
 		ErrorResponse errorResponse = ErrorResponse.builder()
-				.code(ErrorCatalog.INVALID_GENRE.getErrorCode())
-				.message(ErrorCatalog.INVALID_GENRE.getErrorMessage())
+				.code(ErrorCatalog.INVALID_OR_DOESNT_EXIST_BOOK.getErrorCode())
+				.message(ErrorCatalog.INVALID_OR_DOESNT_EXIST_BOOK.getErrorMessage())
 				.timestamp(LocalDateTime.now())
 				.build();
 		
@@ -62,4 +72,27 @@ public class GlobalControllerAdvice {
 		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
 	}
 	
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ErrorResponse> internalServerErrorHandler(Exception e) {
+		ErrorResponse errorResponse = ErrorResponse.builder()
+				.code(ErrorCatalog.UNEXPECTED_ERROR.getErrorCode())
+				.message(ErrorCatalog.UNEXPECTED_ERROR.getErrorMessage())
+				.timestamp(LocalDateTime.now())
+				.build();
+		
+		System.out.println(e.getMessage());
+		
+		return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler(AuthorNotFoundException.class)
+	public ResponseEntity<ErrorResponse> authorNotFoundException() {
+		ErrorResponse errorResponse = ErrorResponse.builder()
+				.code(ErrorCatalog.AUTHOR_NOT_FOUND.getErrorCode())
+				.message(ErrorCatalog.AUTHOR_NOT_FOUND.getErrorMessage())
+				.timestamp(LocalDateTime.now())
+				.build();
+		
+		return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+	}
 }

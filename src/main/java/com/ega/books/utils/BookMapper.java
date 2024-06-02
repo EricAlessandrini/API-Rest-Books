@@ -1,10 +1,13 @@
 package com.ega.books.utils;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
 import com.ega.books.domain.dto.BookDTO;
+import com.ega.books.domain.entity.AuthorEntity;
 import com.ega.books.domain.entity.BookEntity;
 import com.ega.books.domain.entity.GenreEntity;
 
@@ -24,6 +27,9 @@ public class BookMapper {
 									.name(name)
 									.build())
 							.collect(Collectors.toSet()))
+					.author(AuthorEntity.builder()
+							.fullName(bookDTO.getAuthor())
+							.build())
 					.build();
 		}
 	}
@@ -34,14 +40,11 @@ public class BookMapper {
 		  if(entity == null) {
 			  return null;
 		  } else {
-			  return BookDTO.builder()
-					  .id(entity.getId())
-					  .title(entity.getTitle())
-					  .genre(entity.getGenre()
-							  .stream()
-							  .map(GenreEntity::getName)
-							  .collect(Collectors.toSet()))
-					  .build();
+			  Set<String> genres = new HashSet<>();
+			  for(GenreEntity genreEntity : entity.getGenre()) {
+				  genres.add(genreEntity.getName());
+			  }
+			  return new BookDTO(entity.getTitle(), genres, entity.getAuthor().getFullName());
 		  }  
 	  }
 	 

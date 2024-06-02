@@ -9,11 +9,7 @@ import com.ega.books.domain.entity.GenreEntity;
 public class GenreMapper {
 
 	public GenreDTO entityToDTO(GenreEntity genreEntity) {
-		return GenreDTO.builder()
-				.name(genreEntity.getName())
-				.description(genreEntity.getDescription())
-				.examples(genreEntity.getExamples())
-				.build();
+		return new GenreDTO(genreEntity.getName(), genreEntity.getDescription(), genreEntity.getExamples());
 	}
 	
 	public GenreEntity dtoToEntity(GenreDTO genreDTO) {
