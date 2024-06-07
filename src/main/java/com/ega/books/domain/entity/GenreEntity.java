@@ -1,9 +1,5 @@
 package com.ega.books.domain.entity;
 
-import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,7 +22,4 @@ public class GenreEntity {
 	
 	private String examples;
 	
-	@ManyToMany(mappedBy = "genre", fetch = FetchType.LAZY)
-	@JsonIgnore
-	private Set<BookEntity> books;
 }

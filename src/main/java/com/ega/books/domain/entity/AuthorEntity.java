@@ -1,9 +1,6 @@
 package com.ega.books.domain.entity;
 
 import java.time.LocalDate;
-import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,8 +29,4 @@ public class AuthorEntity {
 	
 	private String nationality;
 	
-	@OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
-	@Column(name = "book_written")
-	@JsonIgnore
-	private Set<BookEntity> booksWritten;
 }

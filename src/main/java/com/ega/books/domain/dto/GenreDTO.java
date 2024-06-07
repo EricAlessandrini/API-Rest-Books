@@ -11,9 +11,4 @@ public class GenreDTO {
 	private String name;
 	private String description;
 	private String examples;
-	
-	public GenreDTO(String name) {
-		this.name = name;
-	}
-	
 }

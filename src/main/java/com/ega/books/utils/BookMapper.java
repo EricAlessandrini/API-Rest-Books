@@ -10,6 +10,7 @@ import com.ega.books.domain.dto.BookDTO;
 import com.ega.books.domain.entity.AuthorEntity;
 import com.ega.books.domain.entity.BookEntity;
 import com.ega.books.domain.entity.GenreEntity;
+import com.ega.books.exception.exceptions.ImpossibleMappingException;
 
 @Component
 public class BookMapper {
@@ -18,7 +19,7 @@ public class BookMapper {
 	
 	public BookEntity dtoToEntity(BookDTO bookDTO) {
 		if(bookDTO == null) {
-			return null;
+			throw new ImpossibleMappingException();
 		} else {
 			return BookEntity.builder()
 					.title(bookDTO.getTitle())
@@ -38,7 +39,7 @@ public class BookMapper {
 	
 	  public BookDTO entityToDTO(BookEntity entity) {
 		  if(entity == null) {
-			  return null;
+			  throw new ImpossibleMappingException();
 		  } else {
 			  Set<String> genres = new HashSet<>();
 			  for(GenreEntity genreEntity : entity.getGenre()) {
