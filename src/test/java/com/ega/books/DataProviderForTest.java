@@ -1,13 +1,10 @@
 package com.ega.books;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 import com.ega.books.domain.Genre;
-import com.ega.books.domain.entity.AuthorEntity;
-import com.ega.books.domain.entity.BookEntity;
-import com.ega.books.domain.entity.GenreEntity;
+import com.ega.books.domain.entity.*;
 
 public class DataProviderForTest {
 	
@@ -52,37 +49,47 @@ public class DataProviderForTest {
 	// Data for Book Entities
 	
 	public static BookEntity returnHarryPotterPiedraFilosofalForTest() {
+		Set<GenreEntity> genres = Set.of(
+				returnFantasyGenreForTest(), 
+				returnScienceFictionGenreForTest()
+				);
+		
 		return BookEntity.builder()
 				.id(1L)
 				.title("Harry Potter y la piedra filosofal")
-				.genre(Set.of(returnFantasyGenreForTest(), returnScienceFictionGenreForTest()))
+				.genre(genres)
 				.author(returnJKRowlingForTest())
 				.build();
 	}
 	
 	public static BookEntity returnHarryPotterCamaraSecretaForTest() {
+		Set<GenreEntity> genres = Set.of(returnFantasyGenreForTest(), returnScienceFictionGenreForTest());
+		
 		return BookEntity.builder()
 				.id(2L)
 				.title("Harry Potter y la camara secreta")
-				.genre(Set.of(returnFantasyGenreForTest(), returnScienceFictionGenreForTest()))
+				.genre(genres)
 				.author(returnJKRowlingForTest())
 				.build();
 	}
 	
 	public static BookEntity returnDuneForTest() {
+		Set<GenreEntity> genres = Set.of(returnFantasyGenreForTest(), returnScienceFictionGenreForTest(), returnThrillerGenreForTest());
+		
 		return BookEntity.builder()
 				.id(3L)
 				.title("Dune")
-				.genre(Set.of(returnFantasyGenreForTest(), returnScienceFictionGenreForTest(), returnThrillerGenreForTest()))
+				.genre(genres)
 				.author(returnFrankHerbertForTest())
 				.build();
 	}
 	
 	public static BookEntity returnAsesinatoExpresoOrienteForTest() {
+		Set<GenreEntity> genres = Set.of(returnMisteryGenreForTest(), returnThrillerGenreForTest());
 		return BookEntity.builder()
 				.id(4L)
 				.title("Asesinato en el Expreso de Oriente")
-				.genre(Set.of(returnMisteryGenreForTest(), returnThrillerGenreForTest()))
+				.genre(genres)
 				.author(returnAgathaChristieForTest())
 				.build();
 	}
