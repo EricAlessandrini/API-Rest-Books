@@ -10,17 +10,20 @@ public class DataProviderForTest {
 	
 	// Data for Author Entities
 	public static AuthorEntity returnJKRowlingForTest() {
-		return AuthorEntity.builder().id(1L).fullName("J.K. Rowling").birthday(LocalDate.of(1965, 07, 31))
+		return AuthorEntity.builder().id(1L).fullName("J.K. Rowling")
+				.birthday(LocalDate.of(1965, 7, 31))
 				.placeOfBirth("Yate, Reino Unido").nationality("British").build();
 	}
 	
 	public static AuthorEntity returnFrankHerbertForTest() {
-		return AuthorEntity.builder().id(2L).fullName("Frank Herbert").birthday(LocalDate.of(1920, 10, 8))
+		return AuthorEntity.builder().id(2L).fullName("Frank Herbert")
+				.birthday(LocalDate.of(1920, 10, 8))
 				.placeOfBirth("Tacoma, Washington").nationality("North American").build();
 	}
 	
 	public static AuthorEntity returnAgathaChristieForTest() {
-		return AuthorEntity.builder().id(3L).fullName("Agatha Christie").birthday(LocalDate.of(1890, 9, 15))
+		return AuthorEntity.builder().id(3L).fullName("Agatha Christie")
+				.birthday(LocalDate.of(1890, 9, 15))
 				.placeOfBirth("Torquay,, Reino Unido").nationality("British").build();
 	}
 	
@@ -63,7 +66,8 @@ public class DataProviderForTest {
 	}
 	
 	public static BookEntity returnHarryPotterCamaraSecretaForTest() {
-		Set<GenreEntity> genres = Set.of(returnFantasyGenreForTest(), returnScienceFictionGenreForTest());
+		Set<GenreEntity> genres = Set.of(returnFantasyGenreForTest(),
+				returnScienceFictionGenreForTest());
 		
 		return BookEntity.builder()
 				.id(2L)
@@ -74,7 +78,9 @@ public class DataProviderForTest {
 	}
 	
 	public static BookEntity returnDuneForTest() {
-		Set<GenreEntity> genres = Set.of(returnFantasyGenreForTest(), returnScienceFictionGenreForTest(), returnThrillerGenreForTest());
+		Set<GenreEntity> genres = Set.of(returnFantasyGenreForTest(),
+				returnScienceFictionGenreForTest(),
+				returnThrillerGenreForTest());
 		
 		return BookEntity.builder()
 				.id(3L)
