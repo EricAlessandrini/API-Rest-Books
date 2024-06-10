@@ -17,7 +17,7 @@ public interface IDatabaseCenter {
 		List<BookEntity> findBooksByAuthorName(String authorName);
 		
 		// Buscar por genero
-		//List<BookEntity> findBooksByGenre(String genre);
+		List<BookEntity> findBooksByGenreName(String genreName);
 
 		// Buscar todos los libros
 		List<BookEntity> findAllBooks();

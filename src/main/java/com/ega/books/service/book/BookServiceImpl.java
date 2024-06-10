@@ -35,6 +35,14 @@ public class BookServiceImpl implements IBookService{
 	}
 
 	@Override
+	public List<BookDTO> findBooksByGenreName(String genreName) {
+		return dbCenter.findBooksByGenreName(genreName)
+				.stream()
+				.map(bookMapper::entityToDTO)
+				.collect(Collectors.toList());
+	}
+
+	@Override
 	public List<BookDTO> findAllBooks() {
 		return dbCenter.findAllBooks().stream()
 				.map(bookMapper::entityToDTO)

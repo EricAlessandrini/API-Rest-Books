@@ -61,9 +61,9 @@ public class BookController {
 	}
 
 	// BUSCAR LIBROS POR GENERO
-	/*@GetMapping("/byGenre")
+	@GetMapping("/byGenre")
 	public ResponseEntity<List<BookDTO>> getBooksByGenreName(@RequestBody String genreName){
 		List<BookDTO> booksFound = service.findBooksByGenreName(genreName);
 		return new ResponseEntity<>(booksFound, HttpStatus.FOUND);
-	}*/
+	}
 }

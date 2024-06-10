@@ -13,7 +13,7 @@ public interface IBookService {
 	List<BookDTO> findBooksByAuthorName(String authorName);
 	
 	// Buscar libros por genero
-	//List<BookDTO> findBooksByGenre(String genreName);
+	List<BookDTO> findBooksByGenreName(String genreName);
 	
 	// Buscar todos los libros
 	List<BookDTO> findAllBooks();

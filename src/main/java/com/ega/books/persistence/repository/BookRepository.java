@@ -17,5 +17,8 @@ public interface BookRepository extends JpaRepository<BookEntity, Long>{
 
 	@Query("SELECT b FROM BookEntity b JOIN b.author a WHERE LOWER(a.fullName) LIKE LOWER(CONCAT('%', :authorName, '%'))")
 	List<BookEntity> findBooksByAuthorName(@Param("authorName") String authorName);
+
+	@Query("SELECT b FROM BookEntity b JOIN b.genre g WHERE LOWER(g.name) LIKE LOWER(CONCAT('%', :genreName, '%'))")
+	List<BookEntity> findBooksByGenreName(@Param("genreName") String genreName);
 	
 }
