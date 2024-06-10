@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @Builder
 public class AuthorDTO {
 
+	private Long id;
+
 	@Pattern(regexp = "^[a-zA-Z\\s]+$", message = "The author's name is NOT valid. You should only use letters...")
 	private String fullName;
 	

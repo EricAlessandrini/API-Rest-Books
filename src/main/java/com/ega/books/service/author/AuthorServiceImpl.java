@@ -33,8 +33,8 @@ public class AuthorServiceImpl implements IAuthorService{
 	}
 
 	@Override
-	public void completeAuthorInfo(AuthorDTO authorDTO) {
-		databaseCenter.completeAuthorInfo(authorMapper.dtoToEntity(authorDTO));
+	public void completeAuthorInfo(Long id, AuthorDTO authorDTO) {
+		databaseCenter.completeAuthorInfo(id, authorMapper.dtoToEntity(authorDTO));
 	}
 	
 	

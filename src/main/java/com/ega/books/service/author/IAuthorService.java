@@ -12,6 +12,6 @@ public interface IAuthorService {
 	// Buscar toda la lista de autores
 	List<AuthorDTO> getAllAuthors();
 	
-	void completeAuthorInfo(AuthorDTO authorDTO);
+	void completeAuthorInfo(Long id, AuthorDTO authorDTO);
 	
 }

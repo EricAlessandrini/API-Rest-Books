@@ -44,6 +44,6 @@ public interface IDatabaseCenter {
 		// Autor por nombre
 		AuthorEntity getAuthorByName(String authorName);
 
-		void completeAuthorInfo(AuthorEntity authorEntity);
+		void completeAuthorInfo(Long id, AuthorEntity authorEntity);
 		
 }

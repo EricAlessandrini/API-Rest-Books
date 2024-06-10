@@ -14,6 +14,7 @@ public class AuthorMapper {
 			throw new ImpossibleMappingException();
 		}
 		return AuthorDTO.builder()
+				.id(authorEntity.getId())
 				.fullName(authorEntity.getFullName())
 				.birthday(authorEntity.getBirthday())
 				.placeOfBirth(authorEntity.getPlaceOfBirth())

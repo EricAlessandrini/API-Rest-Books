@@ -166,16 +166,17 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 	}
 
 	@Override
-	public void completeAuthorInfo(AuthorEntity authorEntity) {
-		AuthorEntity savedAuthor = authorRepository.findAuthorByName(authorEntity.getFullName());
+	public void completeAuthorInfo(Long id, AuthorEntity authorEntity) {
+		Optional<AuthorEntity> savedAuthor = authorRepository.findById(id);
 		
-		if(savedAuthor == null) {
+		if(savedAuthor.isEmpty()) {
 			throw new AuthorNotFoundException();
 		} else {
-			savedAuthor.setBirthday(authorEntity.getBirthday());
-			savedAuthor.setPlaceOfBirth(authorEntity.getPlaceOfBirth());
-			savedAuthor.setNationality(authorEntity.getNationality());
-			authorRepository.save(savedAuthor);
+			AuthorEntity authorDB = savedAuthor.get();
+			authorDB.setBirthday(authorEntity.getBirthday());
+			authorDB.setPlaceOfBirth(authorEntity.getPlaceOfBirth());
+			authorDB.setNationality(authorEntity.getNationality());
+			authorRepository.save(authorDB);
 		}
 	}
 
