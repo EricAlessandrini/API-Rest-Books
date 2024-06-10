@@ -20,16 +20,14 @@ public class AuthorServiceImpl implements IAuthorService{
 
 	@Override
 	public AuthorDTO getAuthorByName(String authorName) {
-		AuthorDTO author = authorMapper.entityToDTO(databaseCenter.getAuthorByName(authorName));
-		return author;
+        return authorMapper.entityToDTO(databaseCenter.getAuthorByName(authorName));
 	}
 
 	@Override
 	public List<AuthorDTO> getAllAuthors() {
-		List<AuthorDTO> authors = databaseCenter.getAllAuthors().stream()
-				.map(authorEntity -> authorMapper.entityToDTO(authorEntity))
+        return databaseCenter.getAllAuthors().stream()
+				.map(authorMapper::entityToDTO)
 				.collect(Collectors.toList());
-		return authors;
 	}
 
 	@Override
