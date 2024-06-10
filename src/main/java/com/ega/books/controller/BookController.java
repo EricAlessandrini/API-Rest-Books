@@ -52,5 +52,18 @@ public class BookController {
 		service.deleteBook(id);
 		return new ResponseEntity<>("El libro ha sido eliminado con exito", HttpStatus.GONE);
 	}
-	
+
+	// BUSCAR LIBRO POR NOMBRE DE AUTOR
+	@GetMapping("/byAuthorName")
+	public ResponseEntity<List<BookDTO>> getBooksByAuthorName(@RequestBody String authorName) {
+		List<BookDTO> booksFound = service.findBooksByAuthorName(authorName);
+		return new ResponseEntity<>(booksFound, HttpStatus.FOUND);
+	}
+
+	// BUSCAR LIBROS POR GENERO
+	/*@GetMapping("/byGenre")
+	public ResponseEntity<List<BookDTO>> getBooksByGenreName(@RequestBody String genreName){
+		List<BookDTO> booksFound = service.findBooksByGenreName(genreName);
+		return new ResponseEntity<>(booksFound, HttpStatus.FOUND);
+	}*/
 }

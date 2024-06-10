@@ -12,6 +12,9 @@ public interface IDatabaseCenter {
 
 	// Buscar por nombre
 		List<BookEntity> findBookByTitle(String bookTitle);
+
+	// Buscar libros por nombre de autor
+		List<BookEntity> findBooksByAuthorName(String authorName);
 		
 		// Buscar por genero
 		//List<BookEntity> findBooksByGenre(String genre);

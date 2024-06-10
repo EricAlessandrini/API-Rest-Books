@@ -21,17 +21,23 @@ public class BookServiceImpl implements IBookService{
 	
 	@Override
 	public List<BookDTO> findBookByTitle(String bookTitle) {
-		List<BookDTO> booksFound = dbCenter.findBookByTitle(bookTitle).stream()
-				.map(bookEntity -> bookMapper.entityToDTO(bookEntity))
+        return dbCenter.findBookByTitle(bookTitle).stream()
+				.map(bookMapper::entityToDTO)
 				.collect(Collectors.toList());
-		
-		return booksFound;
+	}
+
+	@Override
+	public List<BookDTO> findBooksByAuthorName(String authorName) {
+		return dbCenter.findBooksByAuthorName(authorName)
+				.stream()
+				.map(bookMapper::entityToDTO)
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<BookDTO> findAllBooks() {
 		return dbCenter.findAllBooks().stream()
-				.map(bookEntity -> bookMapper.entityToDTO(bookEntity))
+				.map(bookMapper::entityToDTO)
 				.collect(Collectors.toList());
 	}
 

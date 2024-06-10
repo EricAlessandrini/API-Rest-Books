@@ -42,7 +42,12 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 		
 		return booksFound;
 	}
-	
+
+	@Override
+	public List<BookEntity> findBooksByAuthorName(String authorName) {
+        return bookRepository.findBooksByAuthorName(authorName);
+	}
+
 	// BUSCAR TODOS LOS LIBROS
 	@Override
 	public List<BookEntity> findAllBooks() {
