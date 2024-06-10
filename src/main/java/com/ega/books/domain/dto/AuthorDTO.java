@@ -25,7 +25,4 @@ public class AuthorDTO {
 	
 	@Pattern(regexp = "^[a-zA-Z\\s]+$", message = "The country name is NOT valid. You should only use letters...")
 	private String nationality;
-	
-	private Set<String> booksWritten;
-	
 }

@@ -22,13 +22,13 @@ public class BookEntity {
 	
 	private String title;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JoinTable(name = "books_genre", 
 	joinColumns = @JoinColumn(name = "book_id"),
 	inverseJoinColumns = @JoinColumn(name = "genre_id"))
 	@JsonIgnore
 	private Set<GenreEntity> genre;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private AuthorEntity author;
 }

@@ -16,8 +16,8 @@ public class BookDTO {
 	
 	@NotNull(message = "Genre's field CANNOT be empty/invalid")
 	private Set<String> genre = new HashSet<>();
-	
-	@NotBlank(message = "Author's field CANNOT be empty")
+
+	@Pattern(regexp = "^[a-zA-Z\\s]+$", message = "The title's name is NOT valid. You should only use letters...")
 	private String author;
 
 }
