@@ -45,7 +45,11 @@ public class BookMapper {
 			  for(GenreEntity genreEntity : entity.getGenre()) {
 				  genres.add(genreEntity.getName());
 			  }
-			  return new BookDTO(entity.getTitle(), genres, entity.getAuthor().getFullName());
+			  return new BookDTO(
+					  entity.getId(),
+					  entity.getTitle(),
+					  genres,
+					  entity.getAuthor().getFullName());
 		  }  
 	  }
 	 

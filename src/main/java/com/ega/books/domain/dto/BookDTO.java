@@ -11,6 +11,8 @@ import lombok.*;
 @AllArgsConstructor
 public class BookDTO {
 
+	private Long id;
+
 	@Pattern(regexp = "^[a-zA-Z\\s]+$", message = "The title's name is NOT valid. You should only use letters...")
 	private String title;
 	
