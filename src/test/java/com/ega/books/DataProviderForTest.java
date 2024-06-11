@@ -10,9 +10,13 @@ public class DataProviderForTest {
 	
 	// Data for Author Entities
 	public static AuthorEntity returnJKRowlingForTest() {
-		return AuthorEntity.builder().id(1L).fullName("J.K. Rowling")
+		return AuthorEntity.builder()
+				.id(1L)
+				.fullName("J.K. Rowling")
 				.birthday(LocalDate.of(1965, 7, 31))
-				.placeOfBirth("Yate, Reino Unido").nationality("British").build();
+				.placeOfBirth("Yate, Reino Unido")
+				.nationality("British")
+				.build();
 	}
 	
 	public static AuthorEntity returnFrankHerbertForTest() {
@@ -22,15 +26,23 @@ public class DataProviderForTest {
 	}
 	
 	public static AuthorEntity returnAgathaChristieForTest() {
-		return AuthorEntity.builder().id(3L).fullName("Agatha Christie")
+		return AuthorEntity.builder()
+				.id(3L)
+				.fullName("Agatha Christie")
 				.birthday(LocalDate.of(1890, 9, 15))
-				.placeOfBirth("Torquay,, Reino Unido").nationality("British").build();
+				.placeOfBirth("Torquay, Reino Unido")
+				.nationality("British")
+				.build();
 	}
 	
 	// Data for Genre Entities 
 	public static GenreEntity returnFantasyGenreForTest() {
-		return GenreEntity.builder().id(1L).name(Genre.FANTASIA.getName())
-				.description(Genre.FANTASIA.getDescription()).examples(Genre.FANTASIA.getExamples()).build();
+		return GenreEntity.builder()
+				.id(1L)
+				.name(Genre.FANTASIA.getName())
+				.description(Genre.FANTASIA.getDescription())
+				.examples(Genre.FANTASIA.getExamples())
+				.build();
 	}
 	
 	public static GenreEntity returnScienceFictionGenreForTest() {

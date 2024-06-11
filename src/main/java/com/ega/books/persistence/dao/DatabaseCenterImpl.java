@@ -45,12 +45,23 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 
 	@Override
 	public List<BookEntity> findBooksByAuthorName(String authorName) {
-        return bookRepository.findBooksByAuthorName(authorName);
+		List<BookEntity> booksFound = bookRepository.findBooksByAuthorName(authorName);
+
+		if(booksFound.isEmpty()) {
+			throw new EmptyListFromDatabaseException();
+		}
+
+        return booksFound;
 	}
 
 	@Override
 	public List<BookEntity> findBooksByGenreName(String genreName) {
-		return bookRepository.findBooksByGenreName(genreName);
+		List<BookEntity> booksFound = bookRepository.findBooksByGenreName(genreName);
+
+		if(booksFound.isEmpty()) {
+			throw new EmptyListFromDatabaseException();
+		}
+		return booksFound;
 	}
 
 	// BUSCAR TODOS LOS LIBROS
