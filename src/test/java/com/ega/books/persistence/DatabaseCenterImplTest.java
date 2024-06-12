@@ -42,7 +42,6 @@ public class DatabaseCenterImplTest {
 	@Test
 	@DisplayName("Test findBooksByTitle() Method")
 	void databaseCenter_findBookByTitle_test() {
-		// Given
 		String title = "harry";
 		List<BookEntity> booksTest = List.of(
 				TestDataProvider.returnHarryPotterPiedraFilosofalForTest(),
@@ -50,10 +49,8 @@ public class DatabaseCenterImplTest {
 		);
 		when(bookRepository.findBookByTitle(anyString())).thenReturn(booksTest);
 
-		// When
 		List<BookEntity> booksFound = databaseCenter.findBookByTitle(title);
 
-		// Then
 		assertNotNull(booksFound);
 		assertThat(booksFound).hasSize(2);
 
