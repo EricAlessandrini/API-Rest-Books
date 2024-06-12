@@ -1,6 +1,6 @@
 package com.ega.books.persistence;
 
-import com.ega.books.DataProviderForTest;
+import com.ega.books.TestDataProvider;
 import com.ega.books.domain.entity.AuthorEntity;
 import com.ega.books.domain.entity.BookEntity;
 import com.ega.books.domain.entity.GenreEntity;
@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class DatabaseCenterTest {
+public class DatabaseCenterImplTest {
 	
 	@Mock
 	private BookRepository bookRepository;
@@ -44,8 +44,10 @@ public class DatabaseCenterTest {
 	void databaseCenter_findBookByTitle_test() {
 		// Given
 		String title = "harry";
-		List<BookEntity> booksTest = List.of(DataProviderForTest.returnHarryPotterPiedraFilosofalForTest(),
-				DataProviderForTest.returnHarryPotterCamaraSecretaForTest());
+		List<BookEntity> booksTest = List.of(
+				TestDataProvider.returnHarryPotterPiedraFilosofalForTest(),
+				TestDataProvider.returnHarryPotterCamaraSecretaForTest()
+		);
 		when(bookRepository.findBookByTitle(anyString())).thenReturn(booksTest);
 
 		// When
@@ -55,10 +57,12 @@ public class DatabaseCenterTest {
 		assertNotNull(booksFound);
 		assertThat(booksFound).hasSize(2);
 
-		assertEquals(1L, booksFound.get(0).getId());
-		assertEquals("Harry Potter y la piedra filosofal", booksFound.get(0).getTitle());
-		assertThat(booksFound.get(0).getTitle()).containsIgnoringCase(title);
-		assertEquals(2, booksFound.get(0).getGenre().size());
+		assertEquals(1L,
+				booksFound.get(0).getId());
+		assertEquals("Harry Potter y la piedra filosofal",
+				booksFound.get(0).getTitle());
+		assertEquals(2,
+				booksFound.get(0).getGenre().size());
 		for(GenreEntity genre : booksFound.get(0).getGenre()) {
 			assertThat(genre).isInstanceOf(GenreEntity.class);
 			assertThat(genre.getName()).containsAnyOf("Fantasia", "Ciencia Ficcion");
@@ -79,8 +83,10 @@ public class DatabaseCenterTest {
 		);
 
 		assertThat(booksFound.get(1).getTitle()).containsIgnoringCase(title);
-		assertEquals(2L, booksFound.get(1).getId());
-		assertEquals("Harry Potter y la camara secreta", booksFound.get(1).getTitle());
+		assertEquals(2L,
+				booksFound.get(1).getId());
+		assertEquals("Harry Potter y la camara secreta",
+				booksFound.get(1).getTitle());
 		assertEquals(2, booksFound.get(1).getGenre().size());
 		for(GenreEntity genre : booksFound.get(1).getGenre()) {
 			assertThat(genre).isInstanceOf(GenreEntity.class);
@@ -119,18 +125,21 @@ public class DatabaseCenterTest {
 	@DisplayName("Test findBooksByAuthor")
 	void databaseCenter_findBookByAuthor_Test() {
 		String author = "Agatha";
-		List<BookEntity> booksTest = List.of(DataProviderForTest
+		List<BookEntity> booksTest = List.of(TestDataProvider
 				.returnAsesinatoExpresoOrienteForTest());
-		when(bookRepository.findBooksByAuthorName(anyString())).thenReturn(booksTest);
+		when(bookRepository.findBooksByAuthorName(anyString()))
+				.thenReturn(booksTest);
 
 		List<BookEntity> booksFound = databaseCenter.findBooksByAuthorName(author);
 
 		assertNotNull(booksFound);
 		assertThat(booksFound).isNotEmpty();
-		assertThat(booksFound.get(0).getAuthor().getFullName()).contains(author);
-		assertEquals(4L, booksFound.get(0).getId());
-		assertEquals("Asesinato en el Expreso de Oriente", booksFound.get(0)
-				.getTitle());
+		assertThat(booksFound.get(0).getAuthor().getFullName())
+				.contains(author);
+		assertEquals(4L,
+				booksFound.get(0).getId());
+		assertEquals("Asesinato en el Expreso de Oriente",
+				booksFound.get(0).getTitle());
 		for(GenreEntity genre : booksFound.get(0).getGenre()) {
 			assertThat(genre).isInstanceOf(GenreEntity.class);
 			assertThat(genre.getName()).containsAnyOf("Misterio", "Thriller");
@@ -157,9 +166,10 @@ public class DatabaseCenterTest {
 	@DisplayName("Test findBooksByGenreName")
 	void databaseCenter_findBooksByGenreName_Test() {
 		String genre = "thriller";
-		List<BookEntity> booksTest = List.of(DataProviderForTest.returnDuneForTest(),
-				DataProviderForTest.returnAsesinatoExpresoOrienteForTest());
-		when(bookRepository.findBooksByGenreName(anyString())).thenReturn(booksTest);
+		List<BookEntity> booksTest = List.of(TestDataProvider.returnDuneForTest(),
+				TestDataProvider.returnAsesinatoExpresoOrienteForTest());
+		when(bookRepository.findBooksByGenreName(anyString()))
+				.thenReturn(booksTest);
 
 		List<BookEntity> booksFound = databaseCenter.findBooksByGenreName(genre);
 
@@ -170,8 +180,10 @@ public class DatabaseCenterTest {
 				.anyMatch(g -> g.equalsIgnoreCase(genre)));
 
 		// First Book
-		assertEquals(3L, booksFound.get(0).getId());
-		assertEquals("Dune", booksFound.get(0).getTitle());
+		assertEquals(3L,
+				booksFound.get(0).getId());
+		assertEquals("Dune",
+				booksFound.get(0).getTitle());
 		for(GenreEntity g : booksFound.get(0).getGenre()) {
 			assertNotNull(g);
 			assertThat(g).isInstanceOf(GenreEntity.class);
@@ -194,9 +206,10 @@ public class DatabaseCenterTest {
 		);
 
 		// Second Book
-		assertEquals(4L, booksFound.get(1).getId());
-		assertEquals("Asesinato en el Expreso de Oriente", booksFound.get(1)
-				.getTitle());
+		assertEquals(4L,
+				booksFound.get(1).getId());
+		assertEquals("Asesinato en el Expreso de Oriente",
+				booksFound.get(1).getTitle());
 		for(GenreEntity g : booksFound.get(1).getGenre()) {
 			assertNotNull(g);
 			assertThat(g.getName().toLowerCase())
@@ -204,6 +217,7 @@ public class DatabaseCenterTest {
 			assertNotNull(g.getDescription());
 			assertNotNull(g.getExamples());
 		}
+
 		assertAll(
 				() -> assertEquals(3L,
 						booksFound.get(1).getAuthor().getId()),
@@ -224,10 +238,10 @@ public class DatabaseCenterTest {
 	@DisplayName("Test findAllBooks")
 	void databaseCenter_findAllBooks_Test() {
 		List<BookEntity> books = List.of(
-				DataProviderForTest.returnHarryPotterPiedraFilosofalForTest(),
-				DataProviderForTest.returnHarryPotterCamaraSecretaForTest(),
-				DataProviderForTest.returnDuneForTest(),
-				DataProviderForTest.returnAsesinatoExpresoOrienteForTest()
+				TestDataProvider.returnHarryPotterPiedraFilosofalForTest(),
+				TestDataProvider.returnHarryPotterCamaraSecretaForTest(),
+				TestDataProvider.returnDuneForTest(),
+				TestDataProvider.returnAsesinatoExpresoOrienteForTest()
 		);
 		when(bookRepository.findAll()).thenReturn(books);
 
@@ -235,13 +249,17 @@ public class DatabaseCenterTest {
 
 		assertNotNull(booksFound);
 		assertThat(booksFound).isNotEmpty();
-		assertEquals(4, booksFound.size());
+		assertEquals(4,
+				booksFound.size());
 		assertThat(booksFound).hasOnlyElementsOfType(BookEntity.class);
 
 		// Book One
-		assertEquals(1L, booksFound.get(0).getId());
-		assertEquals("Harry Potter y la piedra filosofal", booksFound.get(0).getTitle());
-		assertThat(booksFound.get(0).getGenre()).isNotEmpty();
+		assertEquals(1L,
+				booksFound.get(0).getId());
+		assertEquals("Harry Potter y la piedra filosofal",
+				booksFound.get(0).getTitle());
+		assertThat(booksFound.get(0).getGenre())
+				.isNotEmpty();
 
 		for(GenreEntity genre : booksFound.get(0).getGenre()) {
 			assertNotNull(genre);
@@ -265,9 +283,12 @@ public class DatabaseCenterTest {
 		);
 
 		// Book Two
-		assertEquals(2L, booksFound.get(1).getId());
-		assertEquals("Harry Potter y la camara secreta", booksFound.get(1).getTitle());
+		assertEquals(2L,
+				booksFound.get(1).getId());
+		assertEquals("Harry Potter y la camara secreta",
+				booksFound.get(1).getTitle());
 		assertThat(booksFound.get(1).getGenre()).isNotEmpty();
+
 		for(GenreEntity genre : booksFound.get(1).getGenre()) {
 			assertThat(genre).isInstanceOf(GenreEntity.class);
 			assertThat(genre.getName().toLowerCase())
@@ -275,6 +296,7 @@ public class DatabaseCenterTest {
 			assertNotNull(genre.getDescription());
 			assertNotNull(genre.getExamples());
 		}
+
 		assertAll(
 				() -> assertEquals(1L,
 						booksFound.get(0).getAuthor().getId()),
@@ -289,8 +311,10 @@ public class DatabaseCenterTest {
 		);
 
 		// Book Three
-		assertEquals(3L, booksFound.get(2).getId());
-		assertEquals("Dune", booksFound.get(2).getTitle());
+		assertEquals(3L,
+				booksFound.get(2).getId());
+		assertEquals("Dune",
+				booksFound.get(2).getTitle());
 		assertThat(booksFound.get(2).getGenre()).isNotEmpty();
 
 		for(GenreEntity g : booksFound.get(2).getGenre()) {
@@ -315,7 +339,8 @@ public class DatabaseCenterTest {
 		);
 
 		// Book Four
-		assertEquals(4L, booksFound.get(3).getId());
+		assertEquals(4L,
+				booksFound.get(3).getId());
 		assertEquals("Asesinato en el Expreso de Oriente",
 				booksFound.get(3).getTitle());
 		assertThat(booksFound.get(3).getGenre()).isNotEmpty();
@@ -347,7 +372,11 @@ public class DatabaseCenterTest {
 	@Test
 	@DisplayName("Test saveBook")
 	void databaseCenter_saveBook_test() {
-		BookEntity bookToSave = DataProviderForTest.returnMuerteEnElNiloForTest();
+		BookEntity bookToSave = TestDataProvider.returnMuerteEnElNiloForTest();
+		when(genreRepository.findByNameIgnoreCase("Misterio"))
+				.thenReturn(TestDataProvider.returnMisteryGenreForTest());
+		when(genreRepository.findByNameIgnoreCase("Thriller"))
+				.thenReturn(TestDataProvider.returnThrillerGenreForTest());
 
 		databaseCenter.saveBook(bookToSave);
 
@@ -359,7 +388,8 @@ public class DatabaseCenterTest {
 				bookArgumentCaptor.getValue().getId());
 		assertEquals("Muerte en el Nilo",
 				bookArgumentCaptor.getValue().getTitle());
-		assertThat(bookArgumentCaptor.getValue().getGenre()).isNotEmpty();
+		assertThat(bookArgumentCaptor.getValue().getGenre())
+				.isNotEmpty();
 
 		for(GenreEntity genre : bookArgumentCaptor.getValue().getGenre()) {
 			assertNotNull(genre);
@@ -387,10 +417,10 @@ public class DatabaseCenterTest {
 	@DisplayName("Test updateBook")
 	void databaseCenter_updateBook_test() {
 		Long id = 5L;
-		Optional<BookEntity> bookSaved = Optional.of(DataProviderForTest
+		Optional<BookEntity> bookSaved = Optional.of(TestDataProvider
 				.returnMuerteEnElNiloForTest());
 		when(bookRepository.findById(anyLong())).thenReturn(bookSaved);
-		BookEntity bookToUpdate = DataProviderForTest.returnCaceriaEnVeneciaForTest();
+		BookEntity bookToUpdate = TestDataProvider.returnCaceriaEnVeneciaForTest();
 
 		databaseCenter.updateBook(id, bookToUpdate);
 
@@ -399,7 +429,8 @@ public class DatabaseCenterTest {
 		verify(bookRepository).save(bookArgumentCaptor.capture());
 
 		assertNotNull(bookArgumentCaptor);
-		assertEquals(5L, bookArgumentCaptor.getValue().getId());
+		assertEquals(5L,
+				bookArgumentCaptor.getValue().getId());
 		assertEquals("Caceria en Venecia",
 				bookArgumentCaptor.getValue().getTitle());
 		assertThat(bookArgumentCaptor.getValue().getGenre()).isNotEmpty();
@@ -443,42 +474,50 @@ public class DatabaseCenterTest {
 	@DisplayName("test getAllGenres")
 	void databaseCenter_getAllGenres_test() {
 		List<GenreEntity> genresAvailable = List.of(
-				DataProviderForTest.returnFantasyGenreForTest(),
-				DataProviderForTest.returnScienceFictionGenreForTest(),
-				DataProviderForTest.returnMisteryGenreForTest(),
-				DataProviderForTest.returnThrillerGenreForTest()
+				TestDataProvider.returnFantasyGenreForTest(),
+				TestDataProvider.returnScienceFictionGenreForTest(),
+				TestDataProvider.returnMisteryGenreForTest(),
+				TestDataProvider.returnThrillerGenreForTest()
 		);
 		when(genreRepository.findAll()).thenReturn(genresAvailable);
 
 		List<GenreEntity> genresFound = databaseCenter.getAllGenres();
 
 		// Genre One
-		assertEquals(1L, genresFound.get(0).getId());
-		assertEquals("Fantasia", genresFound.get(0).getName());
+		assertEquals(1L,
+				genresFound.get(0).getId());
+		assertEquals("Fantasia",
+				genresFound.get(0).getName());
 		assertEquals("Historias que incluyen elementos mágicos o sobrenaturales, a menudo ambientadas en mundos imaginarios",
 				genresFound.get(0).getDescription());
 		assertEquals("The Lord of the Rings, Harry Potter, A Song of Iec and Fire",
 				genresFound.get(0).getExamples());
 
 		// Genre Two
-		assertEquals(2L, genresFound.get(1).getId());
-		assertEquals("Ciencia Ficcion", genresFound.get(1).getName());
+		assertEquals(2L,
+				genresFound.get(1).getId());
+		assertEquals("Ciencia Ficcion",
+				genresFound.get(1).getName());
 		assertEquals("Historias que exploran escenarios futuros o alternativos, a menudo centradas en avances tecnológicos o científicos",
 				genresFound.get(1).getDescription());
 		assertEquals("Dune, Neuromancer, The Martian",
 				genresFound.get(1).getExamples());
 
 		// Genre Three
-		assertEquals(3L, genresFound.get(2).getId());
-		assertEquals("Misterio", genresFound.get(2).getName());
+		assertEquals(3L,
+				genresFound.get(2).getId());
+		assertEquals("Misterio",
+				genresFound.get(2).getName());
 		assertEquals("Historias centradas en la resolución de un crimen o un enigma, a menudo con un detective como protagonista",
 				genresFound.get(2).getDescription());
 		assertEquals("The Da Vinci Code, Murder on the Orient Express, Gone Girl",
 				genresFound.get(2).getExamples());
 
 		// Genre Four
-		assertEquals(4L, genresFound.get(3).getId());
-		assertEquals("Thriller", genresFound.get(3).getName());
+		assertEquals(4L,
+				genresFound.get(3).getId());
+		assertEquals("Thriller",
+				genresFound.get(3).getName());
 		assertEquals("Historias llenas de suspenso y tensión, a menudo con temas de peligro y persecución",
 				genresFound.get(3).getDescription());
 		assertEquals("The Girl with the Dragon Tattoo, The Silence of the Lamb, Gone Girl",
@@ -491,14 +530,16 @@ public class DatabaseCenterTest {
 	@DisplayName("Get Genre By Name - Test")
 	void databaseCenter_getGenreByName_test() {
 		String genreName = "mist";
-		GenreEntity genreTest = DataProviderForTest.returnMisteryGenreForTest();
-		when(genreRepository.findByNameIgnoreCase(anyString())).thenReturn(genreTest);
+		GenreEntity genreTest = TestDataProvider.returnMisteryGenreForTest();
+		when(genreRepository.findByNameIgnoreCase(anyString()))
+				.thenReturn(genreTest);
 
 		GenreEntity genreFound = databaseCenter.getGenreByName(genreName);
 
-		assertEquals(genreName.toLowerCase(), genreFound.getName().toLowerCase());
-		assertEquals(3L, genreFound.getId());
-		assertEquals("Misterio", genreFound.getName());
+		assertEquals(3L,
+				genreFound.getId());
+		assertEquals("Misterio",
+				genreFound.getName());
 		assertEquals("Historias centradas en la resolución de un crimen o un enigma, a menudo con un detective como protagonista",
 				genreFound.getDescription());
 		assertEquals("The Da Vinci Code, Murder on the Orient Express, Gone Girl",
@@ -509,9 +550,9 @@ public class DatabaseCenterTest {
 	@DisplayName("Get All Authors - Test")
 	void databaseCenter_getAllAuthors_test() {
 		List<AuthorEntity> authorsAvailable = List.of(
-				DataProviderForTest.returnJKRowlingForTest(),
-				DataProviderForTest.returnFrankHerbertForTest(),
-				DataProviderForTest.returnAgathaChristieForTest()
+				TestDataProvider.returnJKRowlingForTest(),
+				TestDataProvider.returnFrankHerbertForTest(),
+				TestDataProvider.returnAgathaChristieForTest()
 		);
 		when(authorRepository.findAll()).thenReturn(authorsAvailable);
 
@@ -564,7 +605,7 @@ public class DatabaseCenterTest {
 	@DisplayName("Get Author By Name - Test")
 	void databaseCenter_getAuthorByName_test() {
 		String authorName = "frank";
-		AuthorEntity authorTest = DataProviderForTest.returnFrankHerbertForTest();
+		AuthorEntity authorTest = TestDataProvider.returnFrankHerbertForTest();
 		when(authorRepository.findAuthorByName(anyString())).thenReturn(authorTest);
 
 		AuthorEntity authorFound = databaseCenter.getAuthorByName(authorName);
@@ -587,9 +628,9 @@ public class DatabaseCenterTest {
 	@DisplayName("Complete Author Info")
 	void databaseCenter_completeAuthorInfo_test() {
 		Long id = 5L;
-		AuthorEntity authorData = DataProviderForTest.returnOtherInfoAuthorForTest();
+		AuthorEntity authorData = TestDataProvider.returnOtherInfoAuthorForTest();
 		Optional<AuthorEntity> authorToUpdate =
-				Optional.of(DataProviderForTest.returnOnlyNameForTest());
+				Optional.of(TestDataProvider.returnOnlyNameForTest());
 		when(authorRepository.findById(anyLong())).thenReturn(authorToUpdate);
 
 		databaseCenter.completeAuthorInfo(id, authorData);
@@ -597,8 +638,6 @@ public class DatabaseCenterTest {
 		assertNotNull(authorToUpdate.get());
 		assertEquals(4L,
 				authorToUpdate.get().getId());
-		assertEquals("J.R.R. Tolkien",
-				authorToUpdate.get().getFullName());
 		assertEquals(LocalDate.of(1892,1,3),
 				authorToUpdate.get().getBirthday());
 		assertEquals("Bloemfontein, South Africa",

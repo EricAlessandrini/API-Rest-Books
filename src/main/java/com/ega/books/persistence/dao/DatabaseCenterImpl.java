@@ -114,7 +114,6 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 	
 	// COMPROBAR LOS GENEROS DE UN LIBRO Y AGREGARLOS
 	private void validateAndSetGenres(BookEntity bookEntity) {
-		
 		Set<GenreEntity> bookGenres = new HashSet<>();
 		for(GenreEntity genre : bookEntity.getGenre()) {
 			GenreEntity genreSaved = genreRepository.findByNameIgnoreCase(genre.getName());

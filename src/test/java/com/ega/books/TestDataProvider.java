@@ -6,7 +6,7 @@ import java.util.Set;
 import com.ega.books.domain.Genre;
 import com.ega.books.domain.entity.*;
 
-public class DataProviderForTest {
+public class TestDataProvider {
 	
 	// Data for Author Entities
 	public static AuthorEntity returnJKRowlingForTest() {
@@ -71,8 +71,12 @@ public class DataProviderForTest {
 	}
 	
 	public static GenreEntity returnMisteryGenreForTest() {
-		return GenreEntity.builder().id(3L).name(Genre.MISTERIO.getName())
-				.description(Genre.MISTERIO.getDescription()).examples(Genre.MISTERIO.getExamples()).build();
+		return GenreEntity.builder()
+				.id(3L)
+				.name(Genre.MISTERIO.getName())
+				.description(Genre.MISTERIO.getDescription())
+				.examples(Genre.MISTERIO.getExamples())
+				.build();
 	}
 	
 	public static GenreEntity returnThrillerGenreForTest() {
@@ -126,7 +130,10 @@ public class DataProviderForTest {
 	}
 	
 	public static BookEntity returnAsesinatoExpresoOrienteForTest() {
-		Set<GenreEntity> genres = Set.of(returnMisteryGenreForTest(), returnThrillerGenreForTest());
+		Set<GenreEntity> genres = Set.of(
+				returnMisteryGenreForTest(),
+				returnThrillerGenreForTest()
+		);
 		return BookEntity.builder()
 				.id(4L)
 				.title("Asesinato en el Expreso de Oriente")
@@ -140,6 +147,7 @@ public class DataProviderForTest {
 				returnThrillerGenreForTest(),
 				returnMisteryGenreForTest()
 		);
+
 		return BookEntity.builder()
 				.id(5L)
 				.title("Muerte en el Nilo")
