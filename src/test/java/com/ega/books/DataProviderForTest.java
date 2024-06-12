@@ -20,9 +20,13 @@ public class DataProviderForTest {
 	}
 	
 	public static AuthorEntity returnFrankHerbertForTest() {
-		return AuthorEntity.builder().id(2L).fullName("Frank Herbert")
+		return AuthorEntity.builder()
+				.id(2L)
+				.fullName("Frank Herbert")
 				.birthday(LocalDate.of(1920, 10, 8))
-				.placeOfBirth("Tacoma, Washington").nationality("North American").build();
+				.placeOfBirth("Tacoma, Washington")
+				.nationality("North American")
+				.build();
 	}
 	
 	public static AuthorEntity returnAgathaChristieForTest() {
@@ -31,6 +35,21 @@ public class DataProviderForTest {
 				.fullName("Agatha Christie")
 				.birthday(LocalDate.of(1890, 9, 15))
 				.placeOfBirth("Torquay, Reino Unido")
+				.nationality("British")
+				.build();
+	}
+
+	public static AuthorEntity returnOnlyNameForTest() {
+		return AuthorEntity.builder()
+				.id(4L)
+				.fullName("J.R.R. Tolkien")
+				.build();
+	}
+
+	public static AuthorEntity returnOtherInfoAuthorForTest() {
+		return AuthorEntity.builder()
+				.birthday(LocalDate.of(1892,1,3))
+				.placeOfBirth("Bloemfontein, South Africa")
 				.nationality("British")
 				.build();
 	}
@@ -57,8 +76,12 @@ public class DataProviderForTest {
 	}
 	
 	public static GenreEntity returnThrillerGenreForTest() {
-		return GenreEntity.builder().id(4L).name(Genre.THRILLER.getName())
-				.description(Genre.THRILLER.getDescription()).examples(Genre.THRILLER.getExamples()).build();
+		return GenreEntity.builder()
+				.id(4L)
+				.name(Genre.THRILLER.getName())
+				.description(Genre.THRILLER.getDescription())
+				.examples(Genre.THRILLER.getExamples())
+				.build();
 	}
 	
 	// Data for Book Entities
@@ -111,5 +134,23 @@ public class DataProviderForTest {
 				.author(returnAgathaChristieForTest())
 				.build();
 	}
-	
+
+	public static BookEntity returnMuerteEnElNiloForTest() {
+		Set<GenreEntity> genres = Set.of(
+				returnThrillerGenreForTest(),
+				returnMisteryGenreForTest()
+		);
+		return BookEntity.builder()
+				.id(5L)
+				.title("Muerte en el Nilo")
+				.genre(genres)
+				.author(returnAgathaChristieForTest())
+				.build();
+	}
+
+	public static BookEntity returnCaceriaEnVeneciaForTest() {
+		return BookEntity.builder()
+				.title("Caceria en Venecia")
+				.build();
+	}
 }

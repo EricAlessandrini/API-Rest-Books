@@ -1,12 +1,5 @@
 package com.ega.books.persistence.dao;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import org.springframework.stereotype.Component;
-
 import com.ega.books.domain.entity.AuthorEntity;
 import com.ega.books.domain.entity.BookEntity;
 import com.ega.books.domain.entity.GenreEntity;
@@ -17,8 +10,12 @@ import com.ega.books.exception.exceptions.InvalidGenreException;
 import com.ega.books.persistence.repository.AuthorRepository;
 import com.ega.books.persistence.repository.BookRepository;
 import com.ega.books.persistence.repository.GenreRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -87,32 +84,28 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 	// ACTUALIZAR UN NUEVO LIBRO 
 	@Override
 	public void updateBook(Long id, BookEntity bookEntity) {
-		Optional<BookEntity> bookSaved = bookRepository.findById(id);
-		
-		this.validateAndSetGenres(bookEntity);
-		this.checkAuthor(bookEntity);
-		
-		if(bookSaved.isEmpty()) {
-			throw new BookNotFoundException();
-		}
-		
-		BookEntity book = bookSaved.get();
+		BookEntity bookSaved = bookRepository.findById(id)
+				.orElseThrow(BookNotFoundException::new);
+
 		if(bookEntity.getTitle() != null) {
-			book.setTitle(bookEntity.getTitle());
+			bookSaved.setTitle(bookEntity.getTitle());
 		}
 		if(bookEntity.getGenre() != null) {
-			book.setGenre(bookEntity.getGenre());
+			this.validateAndSetGenres(bookEntity);
+			bookSaved.setGenre(bookEntity.getGenre());
+		}
+		if(bookEntity.getAuthor() != null) {
+			this.checkAuthor(bookEntity);
+			bookSaved.setAuthor(bookEntity.getAuthor());
 		}
 		
-		bookRepository.save(book);
+		bookRepository.save(bookSaved);
 	}
 
 	// BORRAR UN LIBRO EXISTENTE
 	@Override
 	public void deleteBookById(Long id) {
-		Optional<BookEntity> bookEntity = bookRepository.findById(id);
-		
-		if(bookEntity.isEmpty()) {
+		if(!bookRepository.existsById(id)) {
 			throw new BookNotFoundException();
 		}
 		
@@ -188,17 +181,15 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 
 	@Override
 	public void completeAuthorInfo(Long id, AuthorEntity authorEntity) {
-		Optional<AuthorEntity> savedAuthor = authorRepository.findById(id);
-		
-		if(savedAuthor.isEmpty()) {
-			throw new AuthorNotFoundException();
-		} else {
-			AuthorEntity authorDB = savedAuthor.get();
-			authorDB.setBirthday(authorEntity.getBirthday());
-			authorDB.setPlaceOfBirth(authorEntity.getPlaceOfBirth());
-			authorDB.setNationality(authorEntity.getNationality());
-			authorRepository.save(authorDB);
-		}
-	}
+		AuthorEntity savedAuthor = authorRepository.findById(id)
+				.orElseThrow(AuthorNotFoundException::new);
 
+		savedAuthor.setFullName(authorEntity.getFullName());
+		savedAuthor.setBirthday(authorEntity.getBirthday());
+		savedAuthor.setPlaceOfBirth(authorEntity.getPlaceOfBirth());
+		savedAuthor.setNationality(authorEntity.getNationality());
+
+		authorRepository.save(savedAuthor);
+	}
 }
+
