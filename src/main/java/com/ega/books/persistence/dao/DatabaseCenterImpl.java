@@ -58,6 +58,7 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 		if(booksFound.isEmpty()) {
 			throw new EmptyListFromDatabaseException();
 		}
+
 		return booksFound;
 	}
 
@@ -90,11 +91,11 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 		if(bookEntity.getTitle() != null) {
 			bookSaved.setTitle(bookEntity.getTitle());
 		}
-		if(bookEntity.getGenre() != null) {
+		if(bookEntity.getGenre() != null){
 			this.validateAndSetGenres(bookEntity);
 			bookSaved.setGenre(bookEntity.getGenre());
 		}
-		if(bookEntity.getAuthor() != null) {
+        if(bookEntity.getAuthor() != null) {
 			this.checkAuthor(bookEntity);
 			bookSaved.setAuthor(bookEntity.getAuthor());
 		}
@@ -129,7 +130,8 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 	// COMPROBAR EL ESTADO DEL AUTOR EN LA BASE DE DATOS
 	
 	private void checkAuthor(BookEntity bookEntity) {
-		AuthorEntity author = authorRepository.findAuthorByName(bookEntity.getAuthor().getFullName());
+		AuthorEntity author = authorRepository.findAuthorByName(
+				bookEntity.getAuthor().getFullName());
 		
 		if(author != null) {
 			bookEntity.setAuthor(author);

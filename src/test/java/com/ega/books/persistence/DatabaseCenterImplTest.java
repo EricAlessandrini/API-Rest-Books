@@ -4,7 +4,10 @@ import com.ega.books.TestDataProvider;
 import com.ega.books.domain.entity.AuthorEntity;
 import com.ega.books.domain.entity.BookEntity;
 import com.ega.books.domain.entity.GenreEntity;
+import com.ega.books.exception.exceptions.AuthorNotFoundException;
+import com.ega.books.exception.exceptions.BookNotFoundException;
 import com.ega.books.exception.exceptions.EmptyListFromDatabaseException;
+import com.ega.books.exception.exceptions.InvalidGenreException;
 import com.ega.books.persistence.dao.DatabaseCenterImpl;
 import com.ega.books.persistence.repository.AuthorRepository;
 import com.ega.books.persistence.repository.BookRepository;
@@ -40,8 +43,8 @@ public class DatabaseCenterImplTest {
 	private DatabaseCenterImpl databaseCenter;
 	
 	@Test
-	@DisplayName("Test findBooksByTitle() Method")
-	void databaseCenter_findBookByTitle_test() {
+	@DisplayName("Test Find Books By Title - Success")
+	void testFindBooksByTitleSuccessful() {
 		String title = "harry";
 		List<BookEntity> booksTest = List.of(
 				TestDataProvider.returnHarryPotterPiedraFilosofalForTest(),
@@ -108,8 +111,8 @@ public class DatabaseCenterImplTest {
 	}
 
 	@Test
-	@DisplayName("Test Exception EmptyList")
-	void databaseCenter_findBookByTitle_emptyException_test() {
+	@DisplayName("Test Find Books By Title - Empty Exception Thrown")
+	void testFindBooksByTitleAndThrowsEmptyException() {
 		String title = "Carnival";
 		List<BookEntity> booksTest = List.of();
 		when(bookRepository.findBookByTitle(anyString())).thenReturn(booksTest);
@@ -119,8 +122,8 @@ public class DatabaseCenterImplTest {
 	}
 
 	@Test
-	@DisplayName("Test findBooksByAuthor")
-	void databaseCenter_findBookByAuthor_Test() {
+	@DisplayName("Test Find Books by Author - Success")
+	void testFindBooksByAuthorNameSuccessful() {
 		String author = "Agatha";
 		List<BookEntity> booksTest = List.of(TestDataProvider
 				.returnAsesinatoExpresoOrienteForTest());
@@ -160,8 +163,22 @@ public class DatabaseCenterImplTest {
 	}
 
 	@Test
-	@DisplayName("Test findBooksByGenreName")
-	void databaseCenter_findBooksByGenreName_Test() {
+	@DisplayName("Test Find Books By Author - Empty Exception Thrown")
+	void testFindBooksByAuthorAndThrowsEmptyException() {
+		String authorName = "Garcia";
+		List<BookEntity> booksEmpty = List.of();
+		when(bookRepository.findBooksByAuthorName(anyString()))
+				.thenReturn(booksEmpty);
+
+		assertThrows(EmptyListFromDatabaseException.class,
+				() -> databaseCenter.findBooksByAuthorName(authorName));
+
+		verify(bookRepository).findBooksByAuthorName(anyString());
+	}
+
+	@Test
+	@DisplayName("Test Find Books By Genre - Success")
+	void testFindBooksByGenreNameSuccessful() {
 		String genre = "thriller";
 		List<BookEntity> booksTest = List.of(TestDataProvider.returnDuneForTest(),
 				TestDataProvider.returnAsesinatoExpresoOrienteForTest());
@@ -232,8 +249,20 @@ public class DatabaseCenterImplTest {
 	}
 
 	@Test
-	@DisplayName("Test findAllBooks")
-	void databaseCenter_findAllBooks_Test() {
+	@DisplayName("Test Find Books By Genre - Empty Exception Thrown")
+	void testFindBooksByGenreNameAndThrowEmptyException() {
+		String genreName = "Comedia";
+		List<BookEntity> booksEmpty = List.of();
+		when(bookRepository.findBooksByGenreName(anyString()))
+				.thenReturn(booksEmpty);
+
+		assertThrows(EmptyListFromDatabaseException.class,
+				() -> databaseCenter.findBooksByGenreName(genreName));
+	}
+
+	@Test
+	@DisplayName("Test Find All Books - Success")
+	void testFindAllBooksSuccessful() {
 		List<BookEntity> books = List.of(
 				TestDataProvider.returnHarryPotterPiedraFilosofalForTest(),
 				TestDataProvider.returnHarryPotterCamaraSecretaForTest(),
@@ -367,8 +396,18 @@ public class DatabaseCenterImplTest {
 	}
 
 	@Test
-	@DisplayName("Test saveBook")
-	void databaseCenter_saveBook_test() {
+	@DisplayName("Test Find All Books - Empty Exception Thrown")
+	void testFindAllBooksAndThrowsEmptyException() {
+		List<BookEntity> booksEmpty = List.of();
+		when(bookRepository.findAll()).thenReturn(booksEmpty);
+
+		assertThrows(EmptyListFromDatabaseException.class,
+				() -> databaseCenter.findAllBooks());
+	}
+
+	@Test
+	@DisplayName("Test Save Book - Successful")
+	void testSaveBookSuccessful() {
 		BookEntity bookToSave = TestDataProvider.returnMuerteEnElNiloForTest();
 		when(genreRepository.findByNameIgnoreCase("Misterio"))
 				.thenReturn(TestDataProvider.returnMisteryGenreForTest());
@@ -411,13 +450,13 @@ public class DatabaseCenterImplTest {
 	}
 
 	@Test
-	@DisplayName("Test updateBook")
-	void databaseCenter_updateBook_test() {
+	@DisplayName("Test Update Book - Success")
+	void testUpdateBookSuccessful() {
 		Long id = 5L;
 		Optional<BookEntity> bookSaved = Optional.of(TestDataProvider
 				.returnMuerteEnElNiloForTest());
 		when(bookRepository.findById(anyLong())).thenReturn(bookSaved);
-		BookEntity bookToUpdate = TestDataProvider.returnCaceriaEnVeneciaForTest();
+		BookEntity bookToUpdate = TestDataProvider.returnBookEntityOnlyTitleForTest();
 
 		databaseCenter.updateBook(id, bookToUpdate);
 
@@ -457,8 +496,165 @@ public class DatabaseCenterImplTest {
 	}
 
 	@Test
-	@DisplayName("Test deleteById")
-	void databaseCenter_deleteById_test() {
+	@DisplayName("Test Update Book - Not Found Exception Thrown")
+	void testUpdateBookWithEmptyAndThrowsNotFoundException() {
+		Long id = 1L;
+		Optional<BookEntity> bookTest = Optional.empty();
+		when(bookRepository.findById(anyLong())).thenReturn(bookTest);
+		BookEntity bookForUpdate = TestDataProvider.returnDuneForTest();
+
+		assertThrows(BookNotFoundException.class,
+				() -> databaseCenter.updateBook(id, bookForUpdate));
+	}
+
+	@Test
+	@DisplayName("Test Update Book - Null Title")
+	void testUpdateBookWithNullTitleAndSetPreviousValue() {
+		Long id = 10L;
+		BookEntity bookToUpdate = TestDataProvider.returnBookEntityNullTitleForTest();
+		Optional<BookEntity> bookFromDatabase = Optional.of(
+				TestDataProvider.returnMuerteEnElNiloForTest()
+		);
+		when(bookRepository.findById(anyLong())).thenReturn(bookFromDatabase);
+		when(genreRepository.findByNameIgnoreCase("Fantasia"))
+				.thenReturn(TestDataProvider.returnFantasyGenreForTest());
+		when(genreRepository.findByNameIgnoreCase("Ciencia Ficcion"))
+				.thenReturn(TestDataProvider.returnFantasyGenreForTest());
+		when(genreRepository.findByNameIgnoreCase("Thriller"))
+				.thenReturn(TestDataProvider.returnFantasyGenreForTest());
+
+
+		ArgumentCaptor<BookEntity> bookArgument = ArgumentCaptor
+				.forClass(BookEntity.class);
+		databaseCenter.updateBook(id, bookToUpdate);
+		verify(bookRepository).save(bookArgument.capture());
+
+		assertNotNull(bookArgument);
+		assertEquals(5L,
+				bookArgument.getValue().getId());
+		assertEquals("Muerte en el Nilo",
+				bookArgument.getValue().getTitle());
+		assertThat(bookArgument.getValue().getGenre()).isNotEmpty();
+
+		for(GenreEntity genre : bookArgument.getValue().getGenre()) {
+			assertNotNull(genre);
+			assertThat(genre.getName().toLowerCase())
+					.containsAnyOf("ciencia ficcion", "thriller", "fantasia");
+			assertNotNull(genre.getDescription());
+			assertNotNull(genre.getExamples());
+		}
+
+		assertAll(
+				() -> assertEquals(4L,
+						bookArgument.getValue().getAuthor().getId()),
+				() -> assertEquals("J.R.R. Tolkien",
+						bookArgument.getValue().getAuthor().getFullName()),
+				() -> assertEquals(LocalDate.of(1892,1,3),
+						bookArgument.getValue().getAuthor().getBirthday()),
+				() -> assertEquals("Bloemfontein, South Africa",
+						bookArgument.getValue().getAuthor().getPlaceOfBirth()),
+				() -> assertEquals("British",
+						bookArgument.getValue().getAuthor().getNationality())
+		);
+	}
+
+	@Test
+	@DisplayName("Test Update Book - Null Genre")
+	void testUpdateBookWithNullGenreAndSetPreviousValue() {
+		Long id = 10L;
+		BookEntity bookToUpdate = TestDataProvider.returnBookEntityNullGenreForTest();
+		Optional<BookEntity> bookFromDatabase = Optional.of(
+				TestDataProvider.returnMuerteEnElNiloForTest()
+		);
+		when(bookRepository.findById(anyLong())).thenReturn(bookFromDatabase);
+
+		ArgumentCaptor<BookEntity> bookArgument = ArgumentCaptor
+				.forClass(BookEntity.class);
+		databaseCenter.updateBook(id, bookToUpdate);
+		verify(bookRepository).save(bookArgument.capture());
+
+		assertNotNull(bookArgument);
+		assertEquals(5L,
+				bookArgument.getValue().getId());
+		assertEquals("Lord Of The Rings",
+				bookArgument.getValue().getTitle());
+		assertThat(bookArgument.getValue().getGenre()).isNotEmpty();
+
+		for(GenreEntity genre : bookArgument.getValue().getGenre()) {
+			assertNotNull(genre);
+			assertThat(genre.getName().toLowerCase())
+					.containsAnyOf("misterio", "thriller");
+			assertNotNull(genre.getDescription());
+			assertNotNull(genre.getExamples());
+		}
+
+		assertAll(
+				() -> assertEquals(4L,
+						bookArgument.getValue().getAuthor().getId()),
+				() -> assertEquals("J.R.R. Tolkien",
+						bookArgument.getValue().getAuthor().getFullName()),
+				() -> assertEquals(LocalDate.of(1892,1,3),
+						bookArgument.getValue().getAuthor().getBirthday()),
+				() -> assertEquals("Bloemfontein, South Africa",
+						bookArgument.getValue().getAuthor().getPlaceOfBirth()),
+				() -> assertEquals("British",
+						bookArgument.getValue().getAuthor().getNationality())
+		);
+	}
+
+	@Test
+	@DisplayName("Test Update Book - Null Author")
+	void testUpdateBookWithNullAuthorAndSetPreviousValue() {
+		Long id = 10L;
+		BookEntity bookToUpdate = TestDataProvider.returnBookEntityNullAuthorForTest();
+		Optional<BookEntity> bookFromDatabase = Optional.of(
+				TestDataProvider.returnMuerteEnElNiloForTest()
+		);
+		when(bookRepository.findById(anyLong())).thenReturn(bookFromDatabase);
+		when(genreRepository.findByNameIgnoreCase("Fantasia"))
+				.thenReturn(TestDataProvider.returnFantasyGenreForTest());
+		when(genreRepository.findByNameIgnoreCase("Ciencia Ficcion"))
+				.thenReturn(TestDataProvider.returnFantasyGenreForTest());
+		when(genreRepository.findByNameIgnoreCase("Thriller"))
+				.thenReturn(TestDataProvider.returnFantasyGenreForTest());
+
+		ArgumentCaptor<BookEntity> bookArgument = ArgumentCaptor
+				.forClass(BookEntity.class);
+		databaseCenter.updateBook(id, bookToUpdate);
+		verify(bookRepository).save(bookArgument.capture());
+
+		assertNotNull(bookArgument);
+		assertEquals(5L,
+				bookArgument.getValue().getId());
+		assertEquals("Lord Of The Rings",
+				bookArgument.getValue().getTitle());
+		assertThat(bookArgument.getValue().getGenre()).isNotEmpty();
+
+		for(GenreEntity genre : bookArgument.getValue().getGenre()) {
+			assertNotNull(genre);
+			assertThat(genre.getName().toLowerCase())
+					.containsAnyOf("ciencia ficcion", "thriller", "fantasia");
+			assertNotNull(genre.getDescription());
+			assertNotNull(genre.getExamples());
+		}
+
+		assertAll(
+				() -> assertEquals(3L,
+						bookArgument.getValue().getAuthor().getId()),
+				() -> assertEquals("Agatha Christie",
+						bookArgument.getValue().getAuthor().getFullName()),
+				() -> assertEquals(LocalDate.of(1890,9,15),
+						bookArgument.getValue().getAuthor().getBirthday()),
+				() -> assertEquals("Torquay, Reino Unido",
+						bookArgument.getValue().getAuthor().getPlaceOfBirth()),
+				() -> assertEquals("British",
+						bookArgument.getValue().getAuthor().getNationality())
+		);
+	}
+
+	@Test
+	@DisplayName("Test Delete By ID - Success")
+	void testDeleteByIdSuccessful() {
 		Long id = 5L;
 		when(bookRepository.existsById(anyLong())).thenReturn(true);
 
@@ -468,8 +664,20 @@ public class DatabaseCenterImplTest {
 	}
 
 	@Test
-	@DisplayName("test getAllGenres")
-	void databaseCenter_getAllGenres_test() {
+	@DisplayName("Test Delete By ID - Not Found Exception Thrown")
+	void testDeleteByIdAndThrowsBookNotFoundException() {
+		Long id = 10L;
+		when(bookRepository.existsById(anyLong())).thenReturn(false);
+
+		assertThrows(BookNotFoundException.class,
+				() -> databaseCenter.deleteBookById(id));
+
+		verify(bookRepository).existsById(anyLong());
+	}
+
+	@Test
+	@DisplayName("Get All Genres - Success")
+	void testGetAllGenresSuccessful() {
 		List<GenreEntity> genresAvailable = List.of(
 				TestDataProvider.returnFantasyGenreForTest(),
 				TestDataProvider.returnScienceFictionGenreForTest(),
@@ -524,9 +732,9 @@ public class DatabaseCenterImplTest {
 	}
 
 	@Test
-	@DisplayName("Get Genre By Name - Test")
-	void databaseCenter_getGenreByName_test() {
-		String genreName = "mist";
+	@DisplayName("Get Genre By Name - Success")
+	void testGetGenreByNameSuccess() {
+		String genreName = "misterio";
 		GenreEntity genreTest = TestDataProvider.returnMisteryGenreForTest();
 		when(genreRepository.findByNameIgnoreCase(anyString()))
 				.thenReturn(genreTest);
@@ -544,8 +752,21 @@ public class DatabaseCenterImplTest {
 	}
 
 	@Test
-	@DisplayName("Get All Authors - Test")
-	void databaseCenter_getAllAuthors_test() {
+	@DisplayName("Get Genre By Name - Invalid Genre Exception Thrown")
+	void testGetGenreByNameWithNullAndThrowsInvalidGenreException() {
+		String genreName = "Comedia";
+		when(genreRepository.findByNameIgnoreCase(anyString()))
+				.thenReturn(null);
+
+		assertThrows(InvalidGenreException.class,
+				() -> databaseCenter.getGenreByName(genreName));
+
+		verify(genreRepository).findByNameIgnoreCase(anyString());
+	}
+
+	@Test
+	@DisplayName("Get All Authors - Success")
+	void testGetAllAuthorsSuccessful() {
 		List<AuthorEntity> authorsAvailable = List.of(
 				TestDataProvider.returnJKRowlingForTest(),
 				TestDataProvider.returnFrankHerbertForTest(),
@@ -599,8 +820,21 @@ public class DatabaseCenterImplTest {
 	}
 
 	@Test
-	@DisplayName("Get Author By Name - Test")
-	void databaseCenter_getAuthorByName_test() {
+	@DisplayName("Get All Authors - Empty List Exception Thrown")
+	void testGetAllAuthorsWithEmptyAndThrowsEmptyListException() {
+		List<AuthorEntity> booksEmpty = List.of();
+		when(authorRepository.findAll())
+				.thenReturn(booksEmpty);
+
+		assertThrows(EmptyListFromDatabaseException.class,
+				() -> databaseCenter.getAllAuthors());
+
+		verify(authorRepository).findAll();
+	}
+
+	@Test
+	@DisplayName("Get Author By Name - Success")
+	void testGetAuthorByNameSuccessful() {
 		String authorName = "frank";
 		AuthorEntity authorTest = TestDataProvider.returnFrankHerbertForTest();
 		when(authorRepository.findAuthorByName(anyString())).thenReturn(authorTest);
@@ -622,8 +856,21 @@ public class DatabaseCenterImplTest {
 	}
 
 	@Test
-	@DisplayName("Complete Author Info")
-	void databaseCenter_completeAuthorInfo_test() {
+	@DisplayName("Get Author By Name - Author Not Found Exception")
+	void testGetAuthorByNameWithNullAndThrowsAuthorNotFoundException() {
+		String authorName = "Garcia";
+		when(authorRepository.findAuthorByName(anyString()))
+				.thenReturn(null);
+
+		assertThrows(AuthorNotFoundException.class,
+				() -> databaseCenter.getAuthorByName(authorName));
+
+		verify(authorRepository).findAuthorByName(anyString());
+	}
+
+	@Test
+	@DisplayName("Complete Author Info - Success")
+	void testCompleteAuthorInformationSuccessful() {
 		Long id = 5L;
 		AuthorEntity authorData = TestDataProvider.returnOtherInfoAuthorForTest();
 		Optional<AuthorEntity> authorToUpdate =
@@ -644,5 +891,19 @@ public class DatabaseCenterImplTest {
 
 		verify(authorRepository).findById(anyLong());
 		verify(authorRepository).save(any(AuthorEntity.class));
+	}
+
+	@Test
+	@DisplayName("Complete Author Info - Throws Author Not Found Exception")
+	void testCompleteAuthorInformationFindEmptyOptionalAndThrowsAuthorNotFoundException() {
+		Long id = 10L;
+		AuthorEntity authorParam = TestDataProvider.returnOnlyNameForTest();
+		when(authorRepository.findById(anyLong()))
+				.thenReturn(Optional.empty());
+
+		assertThrows(AuthorNotFoundException.class,
+				() -> databaseCenter.completeAuthorInfo(id, authorParam));
+
+		verify(authorRepository).findById(anyLong());
 	}
 }

@@ -39,6 +39,16 @@ public class TestDataProvider {
 				.build();
 	}
 
+	public static AuthorEntity returnJRRTolkienForTest() {
+		return AuthorEntity.builder()
+				.id(4L)
+				.fullName("J.R.R. Tolkien")
+				.birthday(LocalDate.of(1892,1,3))
+				.placeOfBirth("Bloemfontein, South Africa")
+				.nationality("British")
+				.build();
+	}
+
 	public static AuthorEntity returnOnlyNameForTest() {
 		return AuthorEntity.builder()
 				.id(4L)
@@ -156,9 +166,43 @@ public class TestDataProvider {
 				.build();
 	}
 
-	public static BookEntity returnCaceriaEnVeneciaForTest() {
+	public static BookEntity returnBookEntityOnlyTitleForTest() {
 		return BookEntity.builder()
 				.title("Caceria en Venecia")
+				.build();
+	}
+
+	public static BookEntity returnBookEntityNullTitleForTest() {
+		Set<GenreEntity> genres = Set.of(
+				TestDataProvider.returnFantasyGenreForTest(),
+				TestDataProvider.returnScienceFictionGenreForTest(),
+				TestDataProvider.returnThrillerGenreForTest()
+		);
+		return BookEntity.builder()
+				.title(null)
+				.genre(genres)
+				.author(returnJRRTolkienForTest())
+				.build();
+	}
+
+	public static BookEntity returnBookEntityNullGenreForTest() {
+		return BookEntity.builder()
+				.title("Lord Of The Rings")
+				.genre(null)
+				.author(returnJRRTolkienForTest())
+				.build();
+	}
+
+	public static BookEntity returnBookEntityNullAuthorForTest() {
+		Set<GenreEntity> genres = Set.of(
+				TestDataProvider.returnFantasyGenreForTest(),
+				TestDataProvider.returnScienceFictionGenreForTest(),
+				TestDataProvider.returnThrillerGenreForTest()
+		);
+		return BookEntity.builder()
+				.title("Lord Of The Rings")
+				.genre(genres)
+				.author(null)
 				.build();
 	}
 }
