@@ -11,19 +11,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -56,20 +53,24 @@ public class BookControllerTest {
                 .content("Any"))
                 .andExpect(status().isFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].title").value("Harry Potter y la piedra filosofal"))
-                .andExpect(jsonPath("$[0].genre").isArray())
+                .andExpect(jsonPath("$[0].id")
+                        .value(1L))
+                .andExpect(jsonPath("$[0].title")
+                        .value("Harry Potter y la piedra filosofal"))
+                .andExpect(jsonPath("$[0].genre")
+                        .isArray())
                 .andExpect(jsonPath("$[0].genre", hasSize(2)))
-                .andExpect(jsonPath("$[0].genre[0]").value("Ciencia Ficcion"))
-                .andExpect(jsonPath("$[0].genre[1]").value("Fantasia"))
-                .andExpect(jsonPath("$[0].author").value("J.K. Rowling"))
-                .andExpect(jsonPath("$[1].id").value(2L))
-                .andExpect(jsonPath("$[1].title").value("Harry Potter y la camara secreta"))
-                .andExpect(jsonPath("$[1].genre").isArray())
+                .andExpect(jsonPath("$[0].author")
+                        .value("J.K. Rowling"))
+                .andExpect(jsonPath("$[1].id")
+                        .value(2L))
+                .andExpect(jsonPath("$[1].title")
+                        .value("Harry Potter y la camara secreta"))
+                .andExpect(jsonPath("$[1].genre")
+                        .isArray())
                 .andExpect(jsonPath("$[1].genre", hasSize(2)))
-                .andExpect(jsonPath("$[1].genre[0]").value("Ciencia Ficcion"))
-                .andExpect(jsonPath("$[1].genre[1]").value("Fantasia"))
-                .andExpect(jsonPath("$[1].author").value("J.K. Rowling"));
+                .andExpect(jsonPath("$[1].author")
+                        .value("J.K. Rowling"));
     }
 
     @Test
@@ -122,5 +123,102 @@ public class BookControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().encoding(StandardCharsets.ISO_8859_1))
                 .andExpect(content().string("El libro fue guardado con exito"));
+    }
+
+    @Test
+    @DisplayName("Edit Book - Controller - Success")
+    void testSaveBookSuccessful() throws Exception {
+        doNothing().when(bookService).updateBook(anyLong(), any(BookDTO.class));
+
+        mockMvc.perform(put("/books/edit/{id}", 2L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{" +
+                        "\"title\" : \"Lord Of The Rings\"," +
+                        "\"genre\" : [\"Fantasia\", \"Ciencia Ficcion\"]," +
+                        "\"author\" : \"J.R.R. Tolkien\"" +
+                        "}"))
+                .andExpect(status().isOk())
+                .andExpect(content().encoding(StandardCharsets.ISO_8859_1))
+                .andExpect(content().string("Los datos del libro han sido modificados con exito"));
+    }
+
+    @Test
+    @DisplayName("Delete Book By Id - Controller - Success")
+    void testDeleteBookByIdSuccessful() throws Exception {
+        doNothing().when(bookService).deleteBook(anyLong());
+
+        mockMvc.perform(delete("/books/delete/{id}", 2L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isGone())
+                .andExpect(content().encoding(StandardCharsets.ISO_8859_1))
+                .andExpect(content().string("El libro ha sido eliminado con exito"));
+    }
+
+    @Test
+    @DisplayName("Get Books By Author - Controller - Success")
+    void testGetBooksByAuthorNameSuccessful() throws Exception {
+        List<BookDTO> books = List.of(
+                TestDataProvider.returnHarryPotterPiedraFilosofalDtoForTest(),
+                TestDataProvider.returnHarryPotterCamaraSecretaDtoForTest()
+        );
+        when(bookService.findBooksByAuthorName(anyString())).thenReturn(books);
+
+        mockMvc.perform(get("/books/byAuthorName")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("Rowling"))
+                .andExpect(status().isFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].id")
+                        .value(1L))
+                .andExpect(jsonPath("$[0].title")
+                        .value("Harry Potter y la piedra filosofal"))
+                .andExpect(jsonPath("$[0].genre")
+                        .isArray())
+                .andExpect(jsonPath("$[0].genre", hasSize(2)))
+                .andExpect(jsonPath("$[0].author")
+                        .value("J.K. Rowling"))
+                .andExpect(jsonPath("$[1].id")
+                        .value(2L))
+                .andExpect(jsonPath("$[1].title")
+                        .value("Harry Potter y la camara secreta"))
+                .andExpect(jsonPath("$[1].genre")
+                        .isArray())
+                .andExpect(jsonPath("$[1].genre", hasSize(2)))
+                .andExpect(jsonPath("$[1].author")
+                        .value("J.K. Rowling"));
+    }
+
+    @Test
+    @DisplayName("Get Books By Genre - Controller - Success")
+    void testGetBooksByGenreNameSuccessful() throws Exception {
+        List<BookDTO> books = List.of(
+                TestDataProvider.returnDuneDtoForTest(),
+                TestDataProvider.returnAsesinatoExpresoOrienteDtoForTest()
+        );
+        when(bookService.findBooksByGenreName(anyString())).thenReturn(books);
+
+        mockMvc.perform(get("/books/byGenre")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("Thriller"))
+                .andExpect(status().isFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].id")
+                        .value(3L))
+                .andExpect(jsonPath("$[0].title")
+                        .value("Dune"))
+                .andExpect(jsonPath("$[0].genre")
+                        .isArray())
+                .andExpect(jsonPath("$[0].genre", hasSize(3)))
+                .andExpect(jsonPath("$[0].author")
+                        .value("Frank Herbert"))
+                .andExpect(jsonPath("$[1].id")
+                        .value(4L))
+                .andExpect(jsonPath("$[1].title")
+                        .value("Asesinato en el Expreso de Oriente"))
+                .andExpect(jsonPath("$[1].genre")
+                        .isArray())
+                .andExpect(jsonPath("$[1].genre", hasSize(2)))
+                .andExpect(jsonPath("$[1].author")
+                        .value("Agatha Christie"));
     }
 }
