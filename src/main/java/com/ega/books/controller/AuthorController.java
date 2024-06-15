@@ -27,9 +27,9 @@ public class AuthorController {
 	}
 	
 	@PutMapping("/editAuthorInfo/{id}")
-	public ResponseEntity<String> completeAuthorInfo(@PathVariable("id") Long id, @RequestBody AuthorDTO authorDTO) {
+	public ResponseEntity<String> completeAuthorInfo(@PathVariable("id") Long id,
+													 @RequestBody AuthorDTO authorDTO) {
 		authorService.completeAuthorInfo(id, authorDTO);
 		return new ResponseEntity<>("Los datos del autor han sido actualizados", HttpStatus.OK);
 	}
-
 }
