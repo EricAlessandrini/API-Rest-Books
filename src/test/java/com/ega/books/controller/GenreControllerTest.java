@@ -29,6 +29,9 @@ public class GenreControllerTest {
     @MockBean
     private GenreServiceImpl genreService;
 
+    /*@MockBean
+    private GlobalControllerAdvice controllerAdvice;*/
+
     @BeforeEach
     void setup() {
         this.mockMvc = MockMvcBuilders
@@ -95,4 +98,22 @@ public class GenreControllerTest {
                 .andExpect(jsonPath("$.examples")
                         .value(genre.getExamples()));
     }
+
+    /*@Test
+    @DisplayName("Get Genre By Name - Controller - Throws Invalid Genre Exception")
+    void testGetGenreByNameAndThrowsInvalidGenreException() throws Exception {
+        String genreName = "Comedia";
+        when(genreService.getGenreByName(anyString())).thenThrow(new InvalidGenreException());
+
+        mockMvc.perform(get("/genre/name")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", genreName))
+                .andExpect(jsonPath("$.code")
+                        .value("API-004"))
+                .andExpect(jsonPath("$.message")
+                        .value("The book's genre is invalid or doesn't exist in our DB"))
+                .andExpect(jsonPath("$.details").doesNotExist())
+                .andExpect(jsonPath("$.timestamp")
+                        .exists());
+    }*/
 }
