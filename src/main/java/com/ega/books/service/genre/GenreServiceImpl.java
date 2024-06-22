@@ -21,7 +21,7 @@ public class GenreServiceImpl implements IGenreService{
 	@Override
 	public List<GenreDTO> getAllGenres() {
 		return dbCenter.getAllGenres().stream()
-				.map(genreEntity -> genreMapper.entityToDTO(genreEntity))
+				.map(genreMapper::entityToDTO)
 				.collect(Collectors.toList());
 	}
 

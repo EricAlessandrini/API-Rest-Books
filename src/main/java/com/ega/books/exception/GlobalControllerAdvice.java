@@ -2,6 +2,7 @@ package com.ega.books.exception;
 
 import java.time.LocalDateTime;
 
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,7 +21,7 @@ public class GlobalControllerAdvice {
 				.message(ErrorCatalog.INVALID_INPUT.getErrorMessage())
 				.details(errors.getFieldErrors()
 						.stream()
-						.map(fieldError -> fieldError.getDefaultMessage())
+						.map(DefaultMessageSourceResolvable::getDefaultMessage)
 						.toList())
 				.timestamp(LocalDateTime.now())
 				.build();
@@ -53,8 +54,8 @@ public class GlobalControllerAdvice {
 	@ExceptionHandler(InvalidGenreException.class)
 	public ResponseEntity<ErrorResponse> invalidGenreExceptionHandler(){
 		ErrorResponse errorResponse = ErrorResponse.builder()
-				.code(ErrorCatalog.INVALID_OR_DOESNT_EXIST_BOOK.getErrorCode())
-				.message(ErrorCatalog.INVALID_OR_DOESNT_EXIST_BOOK.getErrorMessage())
+				.code(ErrorCatalog.INVALID_OR_DOESNT_EXIST_GENRE.getErrorCode())
+				.message(ErrorCatalog.INVALID_OR_DOESNT_EXIST_GENRE.getErrorMessage())
 				.timestamp(LocalDateTime.now())
 				.build();
 		
@@ -70,19 +71,6 @@ public class GlobalControllerAdvice {
 				.build();
 		
 		return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
-	}
-	
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ErrorResponse> internalServerErrorHandler(Exception e) {
-		ErrorResponse errorResponse = ErrorResponse.builder()
-				.code(ErrorCatalog.UNEXPECTED_ERROR.getErrorCode())
-				.message(ErrorCatalog.UNEXPECTED_ERROR.getErrorMessage())
-				.timestamp(LocalDateTime.now())
-				.build();
-		
-		System.out.println(e.getMessage());
-		
-		return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ExceptionHandler(AuthorNotFoundException.class)

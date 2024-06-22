@@ -245,7 +245,7 @@ public class DatabaseCenterImplTest {
 						booksFound.get(1).getAuthor().getNationality())
 		);
 
-		verify(bookRepository).findBooksByGenreName(anyString());
+		verify(bookRepository, times(1)).findBooksByGenreName(anyString());
 	}
 
 	@Test

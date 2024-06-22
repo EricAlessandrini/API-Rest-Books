@@ -34,6 +34,4 @@ public class AuthorServiceImpl implements IAuthorService{
 	public void completeAuthorInfo(Long id, AuthorDTO authorDTO) {
 		databaseCenter.completeAuthorInfo(id, authorMapper.dtoToEntity(authorDTO));
 	}
-	
-	
 }
