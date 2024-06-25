@@ -4,7 +4,7 @@ import com.ega.books.TestDataProvider;
 import com.ega.books.domain.dto.AuthorDTO;
 import com.ega.books.domain.entity.AuthorEntity;
 import com.ega.books.persistence.dao.DatabaseCenterImpl;
-import com.ega.books.utils.AuthorMapper;
+import com.ega.books.utils.mappers.AuthorMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

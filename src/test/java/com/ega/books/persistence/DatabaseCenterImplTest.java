@@ -4,10 +4,7 @@ import com.ega.books.TestDataProvider;
 import com.ega.books.domain.entity.AuthorEntity;
 import com.ega.books.domain.entity.BookEntity;
 import com.ega.books.domain.entity.GenreEntity;
-import com.ega.books.exception.exceptions.AuthorNotFoundException;
-import com.ega.books.exception.exceptions.BookNotFoundException;
-import com.ega.books.exception.exceptions.EmptyListFromDatabaseException;
-import com.ega.books.exception.exceptions.InvalidGenreException;
+import com.ega.books.exception.exceptions.DatabaseException;
 import com.ega.books.persistence.dao.DatabaseCenterImpl;
 import com.ega.books.persistence.repository.AuthorRepository;
 import com.ega.books.persistence.repository.BookRepository;
@@ -117,7 +114,7 @@ public class DatabaseCenterImplTest {
 		List<BookEntity> booksTest = List.of();
 		when(bookRepository.findBookByTitle(anyString())).thenReturn(booksTest);
 
-		assertThrows(EmptyListFromDatabaseException.class,
+		assertThrows(DatabaseException.class,
 				() -> databaseCenter.findBookByTitle(title));
 	}
 
@@ -170,7 +167,7 @@ public class DatabaseCenterImplTest {
 		when(bookRepository.findBooksByAuthorName(anyString()))
 				.thenReturn(booksEmpty);
 
-		assertThrows(EmptyListFromDatabaseException.class,
+		assertThrows(DatabaseException.class,
 				() -> databaseCenter.findBooksByAuthorName(authorName));
 
 		verify(bookRepository).findBooksByAuthorName(anyString());
@@ -256,7 +253,7 @@ public class DatabaseCenterImplTest {
 		when(bookRepository.findBooksByGenreName(anyString()))
 				.thenReturn(booksEmpty);
 
-		assertThrows(EmptyListFromDatabaseException.class,
+		assertThrows(DatabaseException.class,
 				() -> databaseCenter.findBooksByGenreName(genreName));
 	}
 
@@ -401,7 +398,7 @@ public class DatabaseCenterImplTest {
 		List<BookEntity> booksEmpty = List.of();
 		when(bookRepository.findAll()).thenReturn(booksEmpty);
 
-		assertThrows(EmptyListFromDatabaseException.class,
+		assertThrows(DatabaseException.class,
 				() -> databaseCenter.findAllBooks());
 	}
 
@@ -503,7 +500,7 @@ public class DatabaseCenterImplTest {
 		when(bookRepository.findById(anyLong())).thenReturn(bookTest);
 		BookEntity bookForUpdate = TestDataProvider.returnDuneForTest();
 
-		assertThrows(BookNotFoundException.class,
+		assertThrows(DatabaseException.class,
 				() -> databaseCenter.updateBook(id, bookForUpdate));
 	}
 
@@ -669,7 +666,7 @@ public class DatabaseCenterImplTest {
 		Long id = 10L;
 		when(bookRepository.existsById(anyLong())).thenReturn(false);
 
-		assertThrows(BookNotFoundException.class,
+		assertThrows(DatabaseException.class,
 				() -> databaseCenter.deleteBookById(id));
 
 		verify(bookRepository).existsById(anyLong());
@@ -758,7 +755,7 @@ public class DatabaseCenterImplTest {
 		when(genreRepository.findByNameIgnoreCase(anyString()))
 				.thenReturn(null);
 
-		assertThrows(InvalidGenreException.class,
+		assertThrows(DatabaseException.class,
 				() -> databaseCenter.getGenreByName(genreName));
 
 		verify(genreRepository).findByNameIgnoreCase(anyString());
@@ -826,7 +823,7 @@ public class DatabaseCenterImplTest {
 		when(authorRepository.findAll())
 				.thenReturn(booksEmpty);
 
-		assertThrows(EmptyListFromDatabaseException.class,
+		assertThrows(DatabaseException.class,
 				() -> databaseCenter.getAllAuthors());
 
 		verify(authorRepository).findAll();
@@ -862,7 +859,7 @@ public class DatabaseCenterImplTest {
 		when(authorRepository.findAuthorByName(anyString()))
 				.thenReturn(null);
 
-		assertThrows(AuthorNotFoundException.class,
+		assertThrows(DatabaseException.class,
 				() -> databaseCenter.getAuthorByName(authorName));
 
 		verify(authorRepository).findAuthorByName(anyString());
@@ -901,7 +898,7 @@ public class DatabaseCenterImplTest {
 		when(authorRepository.findById(anyLong()))
 				.thenReturn(Optional.empty());
 
-		assertThrows(AuthorNotFoundException.class,
+		assertThrows(DatabaseException.class,
 				() -> databaseCenter.completeAuthorInfo(id, authorParam));
 
 		verify(authorRepository).findById(anyLong());

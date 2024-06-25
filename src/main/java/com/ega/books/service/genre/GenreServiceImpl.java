@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ega.books.domain.dto.GenreDTO;
 import com.ega.books.persistence.dao.IDatabaseCenter;
-import com.ega.books.utils.GenreMapper;
+import com.ega.books.utils.mappers.GenreMapper;
 
 import lombok.RequiredArgsConstructor;
 

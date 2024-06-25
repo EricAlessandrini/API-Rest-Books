@@ -1,17 +1,21 @@
-package com.ega.books.utils;
+package com.ega.books.utils.mappers;
 
+import com.ega.books.exception.exceptions.MappingException;
+import com.ega.books.utils.ErrorCatalog;
 import org.springframework.stereotype.Component;
 
 import com.ega.books.domain.dto.AuthorDTO;
 import com.ega.books.domain.entity.AuthorEntity;
-import com.ega.books.exception.exceptions.ImpossibleMappingException;
 
 @Component
 public class AuthorMapper {
 
 	public AuthorDTO entityToDTO(AuthorEntity authorEntity) {
 		if(authorEntity == null) {
-			throw new ImpossibleMappingException();
+			throw new MappingException(
+					ErrorCatalog.IMPOSSIBLE_MAPPING.getErrorCode(),
+					ErrorCatalog.IMPOSSIBLE_MAPPING.getErrorMessage()
+			);
 		}
 		return AuthorDTO.builder()
 				.id(authorEntity.getId())
@@ -24,7 +28,10 @@ public class AuthorMapper {
 	
 	public AuthorEntity dtoToEntity(AuthorDTO authorDTO) {
 		if(authorDTO == null) {
-			throw new ImpossibleMappingException();
+			throw new MappingException(
+					ErrorCatalog.IMPOSSIBLE_MAPPING.getErrorCode(),
+					ErrorCatalog.IMPOSSIBLE_MAPPING.getErrorMessage()
+			);
 		}
 		
 		return AuthorEntity.builder()

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.ega.books.domain.dto.BookDTO;
 import com.ega.books.domain.entity.BookEntity;
 import com.ega.books.persistence.dao.IDatabaseCenter;
-import com.ega.books.utils.BookMapper;
+import com.ega.books.utils.mappers.BookMapper;
 
 import lombok.RequiredArgsConstructor;
 

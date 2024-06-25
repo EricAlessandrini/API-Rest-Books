@@ -3,13 +3,11 @@ package com.ega.books.persistence.dao;
 import com.ega.books.domain.entity.AuthorEntity;
 import com.ega.books.domain.entity.BookEntity;
 import com.ega.books.domain.entity.GenreEntity;
-import com.ega.books.exception.exceptions.AuthorNotFoundException;
-import com.ega.books.exception.exceptions.BookNotFoundException;
-import com.ega.books.exception.exceptions.EmptyListFromDatabaseException;
-import com.ega.books.exception.exceptions.InvalidGenreException;
+import com.ega.books.exception.exceptions.DatabaseException;
 import com.ega.books.persistence.repository.AuthorRepository;
 import com.ega.books.persistence.repository.BookRepository;
 import com.ega.books.persistence.repository.GenreRepository;
+import com.ega.books.utils.ErrorCatalog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +32,10 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 		List<BookEntity> booksFound = bookRepository.findBookByTitle(bookTitle);
 		
 		if(booksFound.isEmpty()) {
-			throw new EmptyListFromDatabaseException();
+			throw new DatabaseException(
+					ErrorCatalog.EMPTY_LIST_FROM_DATABASE.getErrorCode(),
+					ErrorCatalog.EMPTY_LIST_FROM_DATABASE.getErrorMessage()
+			);
 		}
 		
 		return booksFound;
@@ -45,7 +46,10 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 		List<BookEntity> booksFound = bookRepository.findBooksByAuthorName(authorName);
 
 		if(booksFound.isEmpty()) {
-			throw new EmptyListFromDatabaseException();
+			throw new DatabaseException(
+					ErrorCatalog.EMPTY_LIST_FROM_DATABASE.getErrorCode(),
+					ErrorCatalog.EMPTY_LIST_FROM_DATABASE.getErrorMessage()
+			);
 		}
 
         return booksFound;
@@ -56,7 +60,10 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 		List<BookEntity> booksFound = bookRepository.findBooksByGenreName(genreName);
 
 		if(booksFound.isEmpty()) {
-			throw new EmptyListFromDatabaseException();
+			throw new DatabaseException(
+					ErrorCatalog.EMPTY_LIST_FROM_DATABASE.getErrorCode(),
+					ErrorCatalog.EMPTY_LIST_FROM_DATABASE.getErrorMessage()
+			);
 		}
 
 		return booksFound;
@@ -68,7 +75,10 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 		List<BookEntity> allBooks = bookRepository.findAll();
 		
 		if(allBooks.isEmpty()) {
-			throw new EmptyListFromDatabaseException();
+			throw new DatabaseException(
+					ErrorCatalog.EMPTY_LIST_FROM_DATABASE.getErrorCode(),
+					ErrorCatalog.EMPTY_LIST_FROM_DATABASE.getErrorMessage()
+			);
 		}
 		
 		return allBooks;
@@ -86,7 +96,10 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 	@Override
 	public void updateBook(Long id, BookEntity bookEntity) {
 		BookEntity bookSaved = bookRepository.findById(id)
-				.orElseThrow(BookNotFoundException::new);
+				.orElseThrow(() -> new DatabaseException(
+						ErrorCatalog.BOOK_NOT_FOUND.getErrorCode(),
+						ErrorCatalog.BOOK_NOT_FOUND.getErrorMessage()
+				));
 
 		if(bookEntity.getTitle() != null) {
 			bookSaved.setTitle(bookEntity.getTitle());
@@ -107,7 +120,10 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 	@Override
 	public void deleteBookById(Long id) {
 		if(!bookRepository.existsById(id)) {
-			throw new BookNotFoundException();
+			throw new DatabaseException(
+					ErrorCatalog.BOOK_NOT_FOUND.getErrorCode(),
+					ErrorCatalog.BOOK_NOT_FOUND.getErrorMessage()
+			);
 		}
 		
 		bookRepository.deleteById(id);
@@ -119,7 +135,10 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 		for(GenreEntity genre : bookEntity.getGenre()) {
 			GenreEntity genreSaved = genreRepository.findByNameIgnoreCase(genre.getName());
 			if(genreSaved == null) {
-				throw new InvalidGenreException();
+				throw new DatabaseException(
+						ErrorCatalog.INVALID_OR_DOESNT_EXIST_GENRE.getErrorCode(),
+						ErrorCatalog.INVALID_OR_DOESNT_EXIST_GENRE.getErrorMessage()
+				);
 			} else {
 				bookGenres.add(genreSaved);
 			}
@@ -150,7 +169,10 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 		GenreEntity genreEntity = genreRepository.findByNameIgnoreCase(name);
 		
 		if(genreEntity == null) {
-			throw new InvalidGenreException();
+			throw new DatabaseException(
+					ErrorCatalog.INVALID_OR_DOESNT_EXIST_GENRE.getErrorCode(),
+					ErrorCatalog.INVALID_OR_DOESNT_EXIST_GENRE.getErrorMessage()
+			);
 		}
 		
 		return genreEntity;
@@ -163,7 +185,10 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 		List<AuthorEntity> authorsList = authorRepository.findAll();
 		
 		if(authorsList.isEmpty()) {
-			throw new EmptyListFromDatabaseException();
+			throw new DatabaseException(
+					ErrorCatalog.EMPTY_LIST_FROM_DATABASE.getErrorCode(),
+					ErrorCatalog.EMPTY_LIST_FROM_DATABASE.getErrorMessage()
+			);
 		}
 		
 		return authorsList;
@@ -174,7 +199,10 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 		AuthorEntity author = authorRepository.findAuthorByName(authorName);
 		
 		if(author == null) {
-			throw new AuthorNotFoundException();
+			throw new DatabaseException(
+					ErrorCatalog.AUTHOR_NOT_FOUND.getErrorCode(),
+					ErrorCatalog.AUTHOR_NOT_FOUND.getErrorMessage()
+			);
 		}
 		
 		return author;
@@ -183,7 +211,10 @@ public class DatabaseCenterImpl implements IDatabaseCenter{
 	@Override
 	public void completeAuthorInfo(Long id, AuthorEntity authorEntity) {
 		AuthorEntity savedAuthor = authorRepository.findById(id)
-				.orElseThrow(AuthorNotFoundException::new);
+				.orElseThrow(() ->new DatabaseException(
+						ErrorCatalog.AUTHOR_NOT_FOUND.getErrorCode(),
+						ErrorCatalog.AUTHOR_NOT_FOUND.getErrorMessage())
+				);
 
 		savedAuthor.setFullName(authorEntity.getFullName());
 		savedAuthor.setBirthday(authorEntity.getBirthday());

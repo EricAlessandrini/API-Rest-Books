@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ega.books.domain.dto.AuthorDTO;
 import com.ega.books.persistence.dao.IDatabaseCenter;
-import com.ega.books.utils.AuthorMapper;
+import com.ega.books.utils.mappers.AuthorMapper;
 
 import lombok.RequiredArgsConstructor;
 

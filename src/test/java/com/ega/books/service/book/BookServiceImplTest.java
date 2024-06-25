@@ -4,7 +4,7 @@ import com.ega.books.TestDataProvider;
 import com.ega.books.domain.dto.BookDTO;
 import com.ega.books.domain.entity.BookEntity;
 import com.ega.books.persistence.dao.DatabaseCenterImpl;
-import com.ega.books.utils.BookMapper;
+import com.ega.books.utils.mappers.BookMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
