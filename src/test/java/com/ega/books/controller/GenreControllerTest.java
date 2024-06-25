@@ -89,7 +89,7 @@ public class GenreControllerTest {
 
         mockMvc.perform(get("/genre/name")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(genreName))
+                .param("name", genreName))
                 .andExpect(status().isFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name")
