@@ -17,6 +17,35 @@ API RESTful desarrollada con Spring Boot para realizar operaciones CRUD de libro
 - JUnit 5 y Mockito  
 - Swagger
 
+## 📌 Endpoints principales
+
+### Endpoints de Libros
+
+| Método | Endpoint       | Descripción                 |
+|--------|--------------|-----------------------------|
+| GET    | `/books`      | Obtiene todas las tareas    |
+| GET    | `/books/title`      | Obtiene libros por titulo    |
+| GET    | `/books/byAuthorName`      | Obtiene libros por nombre del autor    |
+| GET    | `/books/byGenre`      | Obtiene libros por genero    |
+| POST   | `/books/save`      | Crea un nuevo libro        |
+| PUT    | `/books/edit/{id}` | Actualiza un libro         |
+| DELETE | `/books/delete/{id}` | Elimina un libro           |
+
+### Endpoints de Autores
+
+| Método | Endpoint      | Descripción                 |
+|--------|---------------|-----------------------------|
+| GET    | `/author`      | Obtiene todos los autores registrados |
+| GET    | `/author/authorName` | Obtiene un autor por nombre |
+| PUT    | `/author/editAuthorInfo/{id}` | Actualiza un libro |
+
+### Endpoints de Generos
+
+| Método | Endpoint      | Descripción                 |
+|--------|---------------|-----------------------------|
+| GET    | `/genre`      | Obtiene todos los generos registrados |
+| GET    | `/genre/genreName` | Obtiene un genero por nombre |
+
 ## 📫 Contacto  
 LinkedIn: [Eric Alessandrini](https://www.linkedin.com/in/eric-alessandrini29)  
 GitHub: [@EricAlessandrini](https://github.com/EricAlessandrini)  
